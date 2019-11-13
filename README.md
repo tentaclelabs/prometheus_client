@@ -56,7 +56,6 @@ For a full usage example, take a look at [`example/prometheus_client.example.dar
 To achieve the requirements from the Prometheus [Writing Client Libraries][writing_clientlibs] documentation, some features still have to be implemented: 
 
 * Support `Summary` metric type.
-* Support timestamp in samples and text format.
 * Split out shelf support into own package to avoid dependencies on shelf.
 
 

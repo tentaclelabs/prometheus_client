@@ -38,11 +38,15 @@ class Sample {
   /// The sampled value of the metric.
   final double value;
 
+  /// The timestamp of the moment the sample was taken.
+  final int timestamp;
+
   /// Constructs a new sample with [name], [labelNames], [labelValues] as well
-  /// as the sampled [value].
+  /// as the sampled [value] and an optional [timestamp].
   /// [labelNames] and [labelValues] can be empty lists.
   Sample(
-      this.name, List<String> labelNames, List<String> labelValues, this.value)
+      this.name, List<String> labelNames, List<String> labelValues, this.value,
+      [this.timestamp])
       : labelNames = List.unmodifiable(labelNames),
         labelValues = List.unmodifiable(labelValues);
 
@@ -61,6 +65,10 @@ class Sample {
     }
     buffer.write(') ');
     buffer.write(value);
+    if (timestamp != null) {
+      buffer.write(' ');
+      buffer.write(timestamp);
+    }
     return buffer.toString();
   }
 }
