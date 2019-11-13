@@ -39,7 +39,10 @@ void write004(
       }
       sink.write(' ');
       sink.write(formatDouble(sample.value));
-      // TODO: Write Timestamp
+      if (sample.timestamp != null) {
+        sink.write(' ');
+        sink.write(sample.timestamp);
+      }
       sink.writeln();
     }
   }

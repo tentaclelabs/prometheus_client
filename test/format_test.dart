@@ -109,6 +109,15 @@ void main() {
               'my_metric_inf +Inf\nmy_metric_ninf -Inf\nmy_metric_nan NaN\n'));
     });
 
+    test('Should output metric sample timestamp if provided', () {
+      final output = writeToString([
+        MetricFamilySamples('my_metric', MetricType.gauge,
+            'This is a help text.', [Sample('my_metric', [], [], 1.0, 1573668566)])
+      ]);
+
+      expect(output, contains('my_metric 1.0 1573668566\n'));
+    });
+
     test('Should output multiple metrics', () {
       final output = writeToString([
         MetricFamilySamples('my_metric1', MetricType.gauge,
