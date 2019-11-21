@@ -11,7 +11,7 @@ void main() {
         ..inc();
 
       final handler = shelf_handler.prometheusHandler(collectorRegistry);
-      final response = handler(null);
+      final response = await handler(null);
 
       expect(response.statusCode, equals(200));
       expect(

@@ -135,12 +135,12 @@ void main() {
           Histogram('my_metric', 'Help!', buckets: [0.25, 0.5, 1.0]);
 
       await histogram
-          .observeDuration(Future.delayed(Duration(milliseconds: 300)));
+          .observeDuration(Future.delayed(Duration(milliseconds: 350)));
 
       expect(histogram.sum, greaterThan(0.3));
       expect(histogram.count, equals(1.0));
       expect(histogram.bucketValues, equals([0.0, 1.0, 1.0, 1.0]));
-    });
+    }, retry: 3);
 
     test('Should not allow to set label values if no labels were specified',
         () {
