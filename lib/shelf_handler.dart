@@ -9,7 +9,7 @@ import 'package:prometheus_client/format.dart' as format;
 /// Create a shelf handler that returns the metrics in the prometheus text
 /// representation. If no [registry] is provided, the
 /// [CollectorRegistry.defaultRegistry] is used.
-prometheusHandler([CollectorRegistry registry]) {
+shelf.Handler prometheusHandler([CollectorRegistry registry]) {
   registry ??= CollectorRegistry.defaultRegistry;
 
   return (shelf.Request request) {
