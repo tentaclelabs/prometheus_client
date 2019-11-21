@@ -45,6 +45,7 @@ class Gauge extends _SimpleCollector<GaugeChild> {
   GaugeChild _createChild() => GaugeChild._();
 }
 
+/// Defines a [GaugeChild] of a [Gauge] with assigned [labelValues].
 class GaugeChild {
   double _value = 0;
 
