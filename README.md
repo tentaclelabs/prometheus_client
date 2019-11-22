@@ -2,7 +2,7 @@ prometheus_client
 ===
 
 This is a simple Dart implementation of the [Prometheus][prometheus] client library, [similar to to libraries for other languages][writing_clientlibs].
-It supports the default metric types like gauges, counters, or histograms.
+It supports the default metric types like gauges, counters, summaries, or histograms.
 Metrics can be exported using the [text format][text_format].
 To expose them in your server application the package comes with a [shelf][shelf] handler. 
 In addition, it comes with some plug-in ready metrics for the Dart runtime and shelf.
@@ -55,7 +55,6 @@ For a full usage example, take a look at [`example/prometheus_client.example.dar
 
 To achieve the requirements from the Prometheus [Writing Client Libraries][writing_clientlibs] documentation, some features still have to be implemented: 
 
-* Support `Summary` metric type.
 * Split out shelf support into own package to avoid dependencies on shelf.
 
 
