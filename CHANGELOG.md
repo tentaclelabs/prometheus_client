@@ -7,3 +7,7 @@
 ## 0.2.0
 
 - Support timestamp for samples.
+
+## 0.3.0
+
+- Implement `Summary` metric type

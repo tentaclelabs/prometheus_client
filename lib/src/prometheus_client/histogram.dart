@@ -3,6 +3,9 @@ part of prometheus_client;
 /// [Histogram] allows aggregatable distributions of events, such as request
 /// latencies.
 class Histogram extends _SimpleCollector<HistogramChild> {
+  /// Name of the 'le' label.
+  static const leLabel = 'le';
+
   /// The default upper bounds for histogram buckets.
   static const defaultBuckets = <double>[
     .005,
@@ -32,9 +35,9 @@ class Histogram extends _SimpleCollector<HistogramChild> {
   Histogram(String name, String help,
       {List<String> labelNames = const [],
       List<double> buckets = defaultBuckets})
-      : buckets = _sanitizeBuckets(buckets),
+      : buckets = List.unmodifiable(_sanitizeBuckets(buckets)),
         super(name, help, labelNames: labelNames) {
-    if (labelNames.contains('le')) {
+    if (labelNames.contains(leLabel)) {
       throw ArgumentError.value(labelNames, 'labelNames',
           '"le" is a reseved label name for a histogram.');
     }
@@ -49,7 +52,8 @@ class Histogram extends _SimpleCollector<HistogramChild> {
       {List<String> labelNames = const []})
       : this(name, help,
             labelNames: labelNames,
-            buckets: _generateLinearBuckets(start, width, count));
+            buckets:
+                List.unmodifiable(_generateLinearBuckets(start, width, count)));
 
   /// Construct a new [Histogram] with a [name], [help] text, and optional
   /// [labelNames]. The [count] buckets are exponential distributed starting at
@@ -60,7 +64,8 @@ class Histogram extends _SimpleCollector<HistogramChild> {
       {List<String> labelNames = const []})
       : this(name, help,
             labelNames: labelNames,
-            buckets: _generateExponentialBuckets(start, factor, count));
+            buckets: List.unmodifiable(
+                _generateExponentialBuckets(start, factor, count)));
 
   /// Observe a new value [v] and store it in the corresponding buckets of a
   /// histogram without labels.
@@ -94,7 +99,7 @@ class Histogram extends _SimpleCollector<HistogramChild> {
     final samples = <Sample>[];
 
     _children.forEach((labelValues, child) {
-      final labelNamesWithLe = List.of(labelNames)..add('le');
+      final labelNamesWithLe = List.of(labelNames)..add(leLabel);
 
       for (var i = 0; i < buckets.length; ++i) {
         samples.add(Sample(
@@ -133,7 +138,7 @@ class Histogram extends _SimpleCollector<HistogramChild> {
       buckets.add(double.infinity);
     }
 
-    return List.of(buckets);
+    return buckets;
   }
 
   static List<double> _generateLinearBuckets(
@@ -147,7 +152,9 @@ class Histogram extends _SimpleCollector<HistogramChild> {
 
 /// Defines a [HistogramChild] of a [Histogram] with assigned [labelValues].
 class HistogramChild {
+  /// The upper bounds of the buckets.
   final List<double> buckets;
+
   final List<double> _bucketValues;
   double _sum = 0;
 

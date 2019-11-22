@@ -20,18 +20,18 @@ void main() {
 
     test('Should initialize histogram with custom buckets', () {
       final buckets = [0.25, 0.5, 1.0];
-      final counter = Histogram('my_metric', 'Help!', buckets: buckets);
+      final histogram = Histogram('my_metric', 'Help!', buckets: buckets);
 
-      expect(counter.buckets, equals([0.25, 0.5, 1.0, double.infinity]));
+      expect(histogram.buckets, equals([0.25, 0.5, 1.0, double.infinity]));
     });
 
     test(
         'Should initialize histogram with custom buckets that already contain +Inf',
         () {
       final buckets = [0.25, 0.5, 1.0, double.infinity];
-      final counter = Histogram('my_metric', 'Help!', buckets: buckets);
+      final histogram = Histogram('my_metric', 'Help!', buckets: buckets);
 
-      expect(counter.buckets, equals(buckets));
+      expect(histogram.buckets, equals(buckets));
     });
 
     test('Should fail if custom buckets have wrong order', () {
@@ -41,10 +41,10 @@ void main() {
     });
 
     test('Should initialize histogram with linear buckets', () {
-      final counter = Histogram.linear('my_metric', 'Help!', 1.0, 1.0, 10);
+      final histogram = Histogram.linear('my_metric', 'Help!', 1.0, 1.0, 10);
 
       expect(
-          counter.buckets,
+          histogram.buckets,
           equals([
             1.0,
             2.0,
@@ -61,10 +61,10 @@ void main() {
     });
 
     test('Should initialize histogram with exponential buckets', () {
-      final counter = Histogram.exponential('my_metric', 'Help!', 1.0, 2.0, 10);
+      final histogram = Histogram.exponential('my_metric', 'Help!', 1.0, 2.0, 10);
 
       expect(
-          counter.buckets,
+          histogram.buckets,
           equals([
             1.0,
             2.0,
