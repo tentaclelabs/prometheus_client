@@ -1,5 +1,5 @@
 import 'package:prometheus_client/prometheus_client.dart';
-import 'package:prometheus_client/shelf_metrics.dart' as shelf_metrics;
+import 'package:prometheus_example_server/shelf_metrics.dart' as shelf_metrics;
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:test/test.dart';
 

@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:prometheus_client/prometheus_client.dart';
 import 'package:prometheus_client/runtime_metrics.dart' as runtime_metrics;
-import 'package:prometheus_client/shelf_metrics.dart' as shelf_metrics;
-import 'package:prometheus_client/shelf_handler.dart';
+import 'package:prometheus_example_server/shelf_metrics.dart' as shelf_metrics;
+import 'package:prometheus_example_server/shelf_handler.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
@@ -22,7 +22,7 @@ main() async {
   final rollGauge = Gauge('roll_value', 'The last roll value')..register();
   // Create a metric of type counter
   final greetingCounter =
-      Counter('greetings_total', 'The total amount of greetings')..register();
+  Counter('greetings_total', 'The total amount of greetings')..register();
 
   final app = Router();
 
@@ -50,7 +50,7 @@ main() async {
   });
 
   var handler = const shelf.Pipeline()
-      // Register a middleware to track request times
+  // Register a middleware to track request times
       .addMiddleware(shelf_metrics.register())
       .addMiddleware(shelf.logRequests())
       .addHandler(app.handler);
