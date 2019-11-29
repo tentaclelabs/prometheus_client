@@ -1,5 +1,5 @@
 import 'package:prometheus_client/prometheus_client.dart';
-import 'package:prometheus_client/shelf_handler.dart' as shelf_handler;
+import 'package:prometheus_client_shelf/shelf_handler.dart' as shelf_handler;
 import 'package:test/test.dart';
 
 void main() {
