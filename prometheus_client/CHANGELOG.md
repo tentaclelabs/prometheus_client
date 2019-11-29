@@ -1,6 +1,6 @@
 ## 0.4.0
 
-- Refactor shelf support into own package `prometheus_client_shelf`.
+- Move shelf support into own package [`prometheus_client_shelf`](https://pub.dev/packages/prometheus_client).
 
 
 ## 0.3.0+1
