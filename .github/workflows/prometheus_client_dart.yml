@@ -18,7 +18,7 @@ jobs:
     - name: Run tests
       working-directory: ./prometheus_client
       run: pub run test
-    - name: Dart/Flutter Package Analyzer
+    - name: (prometheus_client) Dart/Flutter Package Analyzer
       uses: axel-op/dart_package_analyzer@v2.0.0
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
