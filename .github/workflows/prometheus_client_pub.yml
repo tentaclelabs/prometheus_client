@@ -1,4 +1,4 @@
-name: Publish package
+name: (prometheus_client) Publish package
 
 on: [push]
 
@@ -15,8 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Publish
-        uses: Fox32/actions-flutter-pub-publisher@884abe7
+        uses: Fox32/actions-flutter-pub-publisher@c7d73f6
         with:
           credential: ${{ secrets.CREDENTIAL_JSON }}
           flutter_package: false
           skip_test: true
+          package_directory: './prometheus_client/
