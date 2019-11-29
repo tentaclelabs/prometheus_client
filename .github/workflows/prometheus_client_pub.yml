@@ -20,4 +20,4 @@ jobs:
           credential: ${{ secrets.CREDENTIAL_JSON }}
           flutter_package: false
           skip_test: true
-          package_directory: './prometheus_client/
+          package_directory: './prometheus_client/'
