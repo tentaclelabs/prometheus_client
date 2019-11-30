@@ -1,0 +1,21 @@
+name: (prometheus_client_shelf) Publish package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Publish
+        uses: Fox32/actions-flutter-pub-publisher@master
+        with:
+          credential: ${{ secrets.CREDENTIAL_JSON }}
+          flutter_package: false
+          skip_test: true
+          package_directory: './prometheus_client_shelf/'
