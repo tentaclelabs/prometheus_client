@@ -71,6 +71,6 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [prometheus]: https://prometheus.io/
 [text_format]: https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format
 [shelf]: https://pub.dev/packages/shelf
-[example]: ./example/prometheus_client_example.dart
-[changelog]: ./CHANGELOG.md
+[example]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client/example/prometheus_client_example.dart
+[changelog]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client/CHANGELOG.md
 [prometheus_client_shelf]: https://pub.dev/packages/prometheus_client_shelf

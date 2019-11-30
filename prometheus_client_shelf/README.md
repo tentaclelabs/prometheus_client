@@ -60,5 +60,5 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [tracker]: https://github.com/Fox32/prometheus_client/issues
 [prometheus]: https://prometheus.io/
 [shelf]: https://pub.dev/packages/shelf
-[example]: example/prometheus_client_shelf_example.dart
-[changelog]: ./CHANGELOG.md
+[example]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
+[changelog]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client_shelf/CHANGELOG.md
