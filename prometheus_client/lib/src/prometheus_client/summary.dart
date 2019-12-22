@@ -47,7 +47,7 @@ class Summary extends _SimpleCollector<SummaryChild> {
 
   /// Observe the duration of [callback] and store it in the summary without
   /// labels.
-  T observeDurationSync<T>(T callback()) {
+  T observeDurationSync<T>(T Function() callback) {
     return _noLabelChild.observeDurationSync(callback);
   }
 
@@ -117,7 +117,7 @@ class SummaryChild {
 
   /// Observe the duration of [callback] and store it in the summary with
   /// labels.
-  T observeDurationSync<T>(T callback()) {
+  T observeDurationSync<T>(T Function() callback) {
     final stopwatch = Stopwatch()..start();
     try {
       return callback();
@@ -144,7 +144,9 @@ class SummaryChild {
   double get sum => _sum;
 
   /// Access the value of each quantile of a summary with labels.
-  Map get values => Map.fromIterable(quantiles,
-      key: (q) => q.quantile,
-      value: (q) => _quantileValues.retrieve(q.quantile));
+  Map get values =>
+      {
+        for (var q in quantiles)
+          q.quantile: _quantileValues.retrieve(q.quantile),
+      };
 }

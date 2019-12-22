@@ -1,3 +1,8 @@
+## 0.4.0+2
+
+- Fix some analyzer issues, no functional changes.
+
+
 ## 0.4.0+1
 
 - Align version constraint to `prometheus_client_shelf`.

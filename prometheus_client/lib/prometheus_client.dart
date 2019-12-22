@@ -7,7 +7,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math' as math;
 
-import "package:collection/collection.dart";
+import 'package:collection/collection.dart';
 import 'package:prometheus_client/src/double_format.dart';
 import 'package:prometheus_client/src/quantiles.dart';
 

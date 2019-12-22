@@ -17,6 +17,6 @@ shelf.Handler prometheusHandler([CollectorRegistry registry]) {
     final buffer = StringBuffer();
     format.write004(buffer, registry.collectMetricFamilySamples());
     return shelf.Response.ok(buffer.toString(),
-        headers: {"Content-Type": format.contentType});
+        headers: {'Content-Type': format.contentType});
   };
 }

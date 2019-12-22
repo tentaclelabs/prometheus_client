@@ -8,7 +8,7 @@ import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
 
-main() async {
+void main() async {
   runtime_metrics.register();
 
   // Create a labeled gauge metric that stores the last time an endpoint was
