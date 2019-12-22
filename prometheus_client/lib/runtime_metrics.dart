@@ -16,20 +16,20 @@ class RuntimeCollector extends Collector {
 
   @override
   Iterable<MetricFamilySamples> collect() sync* {
-    yield MetricFamilySamples("dart_info", MetricType.gauge,
-        "Information about the Dart environment.", [
-      Sample("dart_info", const ["version"], [Platform.version], 1)
+    yield MetricFamilySamples('dart_info', MetricType.gauge,
+        'Information about the Dart environment.', [
+      Sample('dart_info', const ['version'], [Platform.version], 1)
     ]);
 
-    yield MetricFamilySamples("process_resident_memory_bytes", MetricType.gauge,
-        "Resident memory size in bytes.", [
-      Sample("process_resident_memory_bytes", const [], const [],
+    yield MetricFamilySamples('process_resident_memory_bytes', MetricType.gauge,
+        'Resident memory size in bytes.', [
+      Sample('process_resident_memory_bytes', const [], const [],
           ProcessInfo.currentRss.toDouble())
     ]);
 
-    yield MetricFamilySamples("process_start_time_seconds", MetricType.gauge,
-        "Start time of the process since unix epoch in seconds.", [
-      Sample("process_start_time_seconds", const [], const [],
+    yield MetricFamilySamples('process_start_time_seconds', MetricType.gauge,
+        'Start time of the process since unix epoch in seconds.', [
+      Sample('process_start_time_seconds', const [], const [],
           _startupTime.toDouble())
     ]);
   }

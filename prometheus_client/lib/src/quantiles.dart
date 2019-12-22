@@ -46,7 +46,7 @@ class CkmsQuantiles {
 
   int _count = 0;
   final _samples = <_Item>[];
-  Float64List _buffer = Float64List(500);
+  final _buffer = Float64List(500);
   int _bufferCount = 0;
 
   CkmsQuantiles(List<Quantile> quantiles)
@@ -70,8 +70,8 @@ class CkmsQuantiles {
       return double.nan;
     }
 
-    int rankMin = 0;
-    int desired = (q * _count).floor();
+    var rankMin = 0;
+    var desired = (q * _count).floor();
 
     for (var i = 1; i < _samples.length; ++i) {
       final prev = _samples[i - 1];
@@ -95,8 +95,8 @@ class CkmsQuantiles {
   }
 
   double _allowableError(int rank) {
-    int size = _samples.length;
-    double minError = size + 1.0;
+    var size = _samples.length;
+    var minError = size + 1.0;
 
     for (var i = 0; i < quantiles.length; ++i) {
       final q = quantiles[i];
@@ -127,8 +127,8 @@ class CkmsQuantiles {
     var j = 0;
     var item = _samples[j];
 
-    for (int i = start; i < _bufferCount; i++) {
-      double v = _buffer[i];
+    for (var i = start; i < _bufferCount; i++) {
+      var v = _buffer[i];
       while (j + 1 < _samples.length && item.value < v) {
         item = _samples[++j];
       }

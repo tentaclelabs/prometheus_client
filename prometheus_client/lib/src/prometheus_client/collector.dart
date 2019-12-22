@@ -112,12 +112,12 @@ class CollectorRegistry {
   /// Most of the time, the [defaultRegistry] is sufficient.
   static final defaultRegistry = CollectorRegistry();
 
-  final _collectorsToNames = Map<Collector, Set<String>>();
-  final _namesToCollectors = Map<String, Collector>();
+  final _collectorsToNames = <Collector, Set<String>>{};
+  final _namesToCollectors = <String, Collector>{};
 
   /// Register a [Collector] with the [CollectorRegistry].
   /// Does nothing if the [collector] is already registered.
-  register(Collector collector) {
+  void register(Collector collector) {
     final collectorNames = _collectNames(collector);
 
     for (var name in collectorNames) {
@@ -135,7 +135,7 @@ class CollectorRegistry {
   }
 
   /// Unregister a [Collector] from the [CollectorRegistry].
-  unregister(Collector collector) {
+  void unregister(Collector collector) {
     final collectorNames = _collectorsToNames.remove(collector);
 
     for (var name in collectorNames) {
@@ -150,7 +150,7 @@ class CollectorRegistry {
 
   Set<String> _collectNames(Collector collector) {
     final metricFamilySamples = collector.collect();
-    final metricNames = Set<String>();
+    final metricNames = <String>{};
 
     for (var metricFamily in metricFamilySamples) {
       switch (metricFamily.type) {

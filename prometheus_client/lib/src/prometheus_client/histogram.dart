@@ -75,7 +75,7 @@ class Histogram extends _SimpleCollector<HistogramChild> {
 
   /// Observe the duration of [callback] and store it in the corresponding
   /// buckets of a histogram without labels.
-  T observeDurationSync<T>(T callback()) {
+  T observeDurationSync<T>(T Function() callback) {
     return _noLabelChild.observeDurationSync(callback);
   }
 
@@ -174,7 +174,7 @@ class HistogramChild {
 
   /// Observe the duration of [callback] and store it in the corresponding
   /// buckets of a histogram with labels.
-  T observeDurationSync<T>(T callback()) {
+  T observeDurationSync<T>(T Function() callback) {
     final stopwatch = Stopwatch()..start();
     try {
       return callback();
