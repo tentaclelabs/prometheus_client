@@ -1,3 +1,7 @@
+## 0.4.0+3
+
+- Remove author from pubspec.
+
 ## 0.4.0+2
 
 - Fix some analyzer issues, no functional changes.

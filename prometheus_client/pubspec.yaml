@@ -1,8 +1,7 @@
 name: prometheus_client
 description: Dart implementation of the Prometheus client library providing metrics.
-version: 0.4.0+2
+version: 0.4.0+3
 homepage: https://github.com/Fox32/prometheus_client
-author: Oliver Sand <oliver.sand@tentaclelabs.com>
 
 environment:
   sdk: '>=2.5.0 <3.0.0'
