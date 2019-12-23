@@ -144,8 +144,7 @@ class SummaryChild {
   double get sum => _sum;
 
   /// Access the value of each quantile of a summary with labels.
-  Map get values =>
-      {
+  Map get values => {
         for (var q in quantiles)
           q.quantile: _quantileValues.retrieve(q.quantile),
       };
