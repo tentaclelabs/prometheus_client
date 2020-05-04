@@ -4,13 +4,12 @@ library runtime_metrics;
 import 'dart:io';
 import 'package:prometheus_client/prometheus_client.dart';
 
-// This is not the actual startup time of the process, but the time the first
-// collector was created. Dart's lazy initialization of globals doesn't allow
-// for a better timing...
-
 /// Collector for runtime metrics. Exposes the `dart_info` and
 /// `process_resident_memory_bytes` metric.
 class RuntimeCollector extends Collector {
+  // This is not the actual startup time of the process, but the time the first
+  // collector was created. Dart's lazy initialization of globals doesn't allow
+  // for a better timing...
   static final _startupTime =
       DateTime.now().millisecondsSinceEpoch / Duration.millisecondsPerSecond;
 
@@ -20,6 +19,12 @@ class RuntimeCollector extends Collector {
         'Information about the Dart environment.', [
       Sample('dart_info', const ['version'], [Platform.version], 1)
     ]);
+
+    // TODO: Metrics about gc & co would be nice runtime metrics but are
+    //  unavailable in the Dart VM.
+
+    // TODO: We can only support a limited set of process metrics, as Dart
+    //  doesn't expose more of them.
 
     yield MetricFamilySamples('process_resident_memory_bytes', MetricType.gauge,
         'Resident memory size in bytes.', [
