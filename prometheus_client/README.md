@@ -66,11 +66,11 @@ For a full usage example, take a look at [`example/prometheus_client_example.dar
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: https://github.com/Fox32/prometheus_client/issues
+[tracker]: https://github.com/tentaclelabs/prometheus_client/issues
 [writing_clientlibs]: https://prometheus.io/docs/instrumenting/writing_clientlibs/
 [prometheus]: https://prometheus.io/
 [text_format]: https://prometheus.io/docs/instrumenting/exposition_formats/#text-based-format
 [shelf]: https://pub.dev/packages/shelf
-[example]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client/example/prometheus_client_example.dart
-[changelog]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client/CHANGELOG.md
+[example]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client/example/prometheus_client_example.dart
+[changelog]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client/CHANGELOG.md
 [prometheus_client_shelf]: https://pub.dev/packages/prometheus_client_shelf

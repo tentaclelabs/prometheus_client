@@ -57,8 +57,8 @@ For a full usage example, take a look at [`example/prometheus_client_shelf_examp
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [prometheus_client]: https://pub.dev/packages/prometheus_client
-[tracker]: https://github.com/Fox32/prometheus_client/issues
+[tracker]: https://github.com/tentaclelabs/prometheus_client/issues
 [prometheus]: https://prometheus.io/
 [shelf]: https://pub.dev/packages/shelf
-[example]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
-[changelog]: https://github.com/Fox32/prometheus_client/blob/master/prometheus_client_shelf/CHANGELOG.md
+[example]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
+[changelog]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client_shelf/CHANGELOG.md
