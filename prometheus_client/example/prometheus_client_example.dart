@@ -35,8 +35,10 @@ main() async {
       metricRequestsCounter.labels([request.uri.path]).inc();
 
       // Output metrics in the text representation
+      request.response.headers.add('content-type', format.contentType);
       format.write004(request.response,
           CollectorRegistry.defaultRegistry.collectMetricFamilySamples());
+
       await request.response.close();
     }));
   }
