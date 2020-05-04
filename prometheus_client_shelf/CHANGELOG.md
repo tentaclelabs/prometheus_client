@@ -1,3 +1,8 @@
+## 0.4.0+4
+
+- Moved to new org [tentaclelabs](https://github.com/tentaclelabs)
+
+
 ## 0.4.0+3
 
 - Remove author from pubspec.
