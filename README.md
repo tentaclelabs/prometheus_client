@@ -1,7 +1,7 @@
 prometheus_client
 ===
 
-This is a simple Dart implementation of the [Prometheus][prometheus] client library, [similar to to libraries for other languages][writing_clientlibs].
+This is a simple Dart implementation of the [Prometheus][prometheus] client library, [similar to libraries for other languages][writing_clientlibs].
 There are two packages:
 
 * [prometheus_client](./prometheus_client): Package implementing metric types like gauges, counters, summaries, or histograms.
