@@ -23,7 +23,7 @@ jobs:
       working-directory: ./prometheus_client_shelf
       run: pub run test
     - name: (prometheus_client_shelf) Dart/Flutter Package Analyzer
-      uses: axel-op/dart_package_analyzer@v2.0.0
+      uses: axel-op/dart_package_analyzer@v2
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
         relativePath: prometheus_client_shelf/
