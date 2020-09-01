@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v2.3.2
       - name: Publish
         uses: sakebook/actions-flutter-pub-publisher@v1.21
         with:
