@@ -1,6 +1,10 @@
+## 0.4.1
+
+- `counter.inc()` should only allow to increment by values greather than zero.
+
 ## 0.4.0+4
 
-- Moved to new org [tentaclelabs](https://github.com/tentaclelabs)
+- Moved to new org [tentaclelabs](https://github.com/tentaclelabs).
 
 
 ## 0.4.0+3
