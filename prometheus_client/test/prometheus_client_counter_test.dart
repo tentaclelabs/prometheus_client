@@ -41,6 +41,12 @@ void main() {
       expect(() => counter.inc(-42.0), throwsArgumentError);
     });
 
+    test('Should not increment by zero', () {
+      final counter = Counter('my_metric', 'Help!');
+
+      expect(() => counter.inc(0.0), throwsArgumentError);
+    });
+
     test('Should not allow to set label values if no labels were specified',
         () {
       final counter = Counter('my_metric', 'Help!');

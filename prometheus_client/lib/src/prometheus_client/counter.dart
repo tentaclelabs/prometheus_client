@@ -39,9 +39,9 @@ class CounterChild {
   /// Increment the [value] of the counter with labels by [amount].
   /// Increments by one, if no amount is provided.
   void inc([double amount = 1]) {
-    if (amount < 0) {
+    if (amount <= 0) {
       throw ArgumentError.value(
-          amount, 'amount', 'Must be greater or equal to zero.');
+          amount, 'amount', 'Must be greater than zero.');
     }
 
     _value += amount;
