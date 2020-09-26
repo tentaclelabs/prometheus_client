@@ -40,8 +40,7 @@ class CounterChild {
   /// Increments by one, if no amount is provided.
   void inc([double amount = 1]) {
     if (amount <= 0) {
-      throw ArgumentError.value(
-          amount, 'amount', 'Must be greater than zero.');
+      throw ArgumentError.value(amount, 'amount', 'Must be greater than zero.');
     }
 
     _value += amount;
