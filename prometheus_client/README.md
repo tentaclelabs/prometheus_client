@@ -1,6 +1,8 @@
 prometheus_client
 ===
 
+[![Pub Version](https://img.shields.io/pub/v/prometheus_client)][prometheus_client]
+
 This is a simple Dart implementation of the [Prometheus][prometheus] client library, [similar to to libraries for other languages][writing_clientlibs].
 It supports the default metric types like gauges, counters, summaries, or histograms.
 Metrics can be exported using the [text format][text_format].
@@ -75,3 +77,4 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [example]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client/example/prometheus_client_example.dart
 [changelog]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client/CHANGELOG.md
 [prometheus_client_shelf]: https://pub.dev/packages/prometheus_client_shelf
+[prometheus_client]: https://pub.dev/packages/prometheus_client
