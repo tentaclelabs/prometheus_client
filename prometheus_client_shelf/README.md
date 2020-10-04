@@ -1,6 +1,8 @@
 prometheus_client_shelf
 ===
 
+[![Pub Version](https://img.shields.io/pub/v/prometheus_client_shelf)][prometheus_client_shelf]
+
 This package exposes [Prometheus][prometheus] metrics for [shelf][shelf] using the package [prometheus_client][prometheus_client]. 
 To expose them in your server application the package comes with a shelf handler. 
 In addition, it comes with some plug-in ready metrics for the shelf.
@@ -57,6 +59,7 @@ For a full usage example, take a look at [`example/prometheus_client_shelf_examp
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [prometheus_client]: https://pub.dev/packages/prometheus_client
+[prometheus_client_shelf]: https://pub.dev/packages/prometheus_client_shelf
 [tracker]: https://github.com/tentaclelabs/prometheus_client/issues
 [prometheus]: https://prometheus.io/
 [shelf]: https://pub.dev/packages/shelf
