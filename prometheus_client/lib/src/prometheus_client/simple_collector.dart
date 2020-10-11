@@ -36,7 +36,7 @@ abstract class _SimpleCollector<Child> extends Collector {
   Child labels(List<String> labelValues) {
     if (labelValues.length != labelNames.length) {
       throw ArgumentError.value(
-          labelValues, 'labelValues', 'Lenght must match label names.');
+          labelValues, 'labelValues', 'Length must match label names.');
     }
 
     return _children.putIfAbsent(List.unmodifiable(labelValues), _createChild);
