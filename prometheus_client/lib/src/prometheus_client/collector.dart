@@ -36,10 +36,10 @@ class Sample {
   final List<String> labelValues;
 
   /// The sampled value of the metric.
-  final double/*!*/ value;
+  final double value;
 
   /// The timestamp of the moment the sample was taken.
-  final int timestamp;
+  final int? timestamp;
 
   /// Constructs a new sample with [name], [labelNames], [labelValues] as well
   /// as the sampled [value] and an optional [timestamp].

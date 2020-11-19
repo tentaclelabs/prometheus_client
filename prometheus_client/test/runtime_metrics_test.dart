@@ -29,7 +29,7 @@ void main() {
       final collectorRegistry = CollectorRegistry();
       runtime_metrics.register(collectorRegistry);
       final metricFamilySamples =
-      collectorRegistry.collectMetricFamilySamples();
+          collectorRegistry.collectMetricFamilySamples();
       final dartInfoMetric = metricFamilySamples
           .where((m) => m.name == 'process_resident_memory_bytes')
           .first;
@@ -51,7 +51,7 @@ void main() {
       final collectorRegistry = CollectorRegistry();
       runtime_metrics.register(collectorRegistry);
       final metricFamilySamples =
-      collectorRegistry.collectMetricFamilySamples();
+          collectorRegistry.collectMetricFamilySamples();
       final dartInfoMetric = metricFamilySamples
           .where((m) => m.name == 'process_start_time_seconds')
           .first;

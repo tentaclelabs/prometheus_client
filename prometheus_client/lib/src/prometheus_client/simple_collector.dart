@@ -25,7 +25,7 @@ abstract class _SimpleCollector<Child> extends Collector {
 
   /// Register the [Collector] at a [registry]. If no [registry] is provided, the
   /// [CollectorRegistry.defaultRegistry] is used.
-  void register([CollectorRegistry registry]) {
+  void register([CollectorRegistry? registry]) {
     registry ??= CollectorRegistry.defaultRegistry;
 
     registry.register(this);

@@ -61,7 +61,8 @@ void main() {
     });
 
     test('Should initialize histogram with exponential buckets', () {
-      final histogram = Histogram.exponential('my_metric', 'Help!', 1.0, 2.0, 10);
+      final histogram =
+          Histogram.exponential('my_metric', 'Help!', 1.0, 2.0, 10);
 
       expect(
           histogram.buckets,

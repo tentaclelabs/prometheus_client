@@ -99,7 +99,7 @@ class SummaryChild {
 
   double _count = 0;
   double _sum = 0;
-  final TimeWindowQuantiles _quantileValues;
+  final TimeWindowQuantiles? _quantileValues;
 
   SummaryChild._(this.quantiles, Duration maxAge, int ageBuckets)
       : _quantileValues = quantiles.isEmpty
@@ -144,6 +144,6 @@ class SummaryChild {
   /// Access the value of each quantile of a summary with labels.
   Map get values => {
         for (var q in quantiles)
-          q.quantile: _quantileValues.retrieve(q.quantile),
+          q.quantile: _quantileValues!.retrieve(q.quantile),
       };
 }

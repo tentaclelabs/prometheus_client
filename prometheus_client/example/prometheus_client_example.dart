@@ -4,7 +4,7 @@ import 'package:prometheus_client/format.dart' as format;
 import 'package:prometheus_client/prometheus_client.dart';
 import 'package:prometheus_client/runtime_metrics.dart' as runtime_metrics;
 
-main() async {
+Future main() async {
   // Register runtime metrics with the default metrics registry
   runtime_metrics.register();
 
