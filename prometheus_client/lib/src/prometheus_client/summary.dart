@@ -110,9 +110,7 @@ class SummaryChild {
   void observe(double v) {
     _count += 1;
     _sum += v;
-    if (_quantileValues != null) {
-      _quantileValues.insert(v);
-    }
+    _quantileValues?.insert(v);
   }
 
   /// Observe the duration of [callback] and store it in the summary with

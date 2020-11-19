@@ -36,7 +36,7 @@ class Sample {
   final List<String> labelValues;
 
   /// The sampled value of the metric.
-  final double value;
+  final double/*!*/ value;
 
   /// The timestamp of the moment the sample was taken.
   final int timestamp;
@@ -138,8 +138,10 @@ class CollectorRegistry {
   void unregister(Collector collector) {
     final collectorNames = _collectorsToNames.remove(collector);
 
-    for (var name in collectorNames) {
-      _namesToCollectors.remove(name);
+    if (collectorNames != null) {
+      for (var name in collectorNames) {
+        _namesToCollectors.remove(name);
+      }
     }
   }
 
