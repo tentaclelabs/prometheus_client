@@ -42,7 +42,7 @@ class RuntimeCollector extends Collector {
 
 /// Register default metrics for the Dart runtime. If no [registry] is provided,
 /// the [CollectorRegistry.defaultRegistry] is used.
-void register([CollectorRegistry registry]) {
+void register([CollectorRegistry? registry]) {
   registry ??= CollectorRegistry.defaultRegistry;
 
   registry.register(RuntimeCollector());
