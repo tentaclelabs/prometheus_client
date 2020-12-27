@@ -20,8 +20,6 @@ jobs:
       - uses: dart-lang/setup-dart@v0.1
         with:
           channel: dev
-      - name: Install pana
-        run: dart pub global activate pana
       - name: Setup credentials
         run: |
           mkdir -p ~/.pub-cache && cat <<EOF > ~/.pub-cache/credentials.json
@@ -31,22 +29,24 @@ jobs:
       - name: (prometheus_client) Install dependencies
         run: dart pub get
         working-directory: prometheus_client
+      - name: (prometheus_client) Dry-run publish
+        run: dart pub publish --dry-run
+        working-directory: prometheus_client
+      - name: (prometheus_client_shelf) Publish
+        run: dart pub publish
+        if: github.event.release
+        working-directory: prometheus_client
+
+      - name: (prometheus_client_shelf) Remove dependency override
+        run: yq d pubspec.yaml dependency_overrides
+        working-directory: prometheus_client_shelf
       - name: (prometheus_client_shelf) Install dependencies
         run: dart pub get
         working-directory: prometheus_client_shelf
-
-      - name: (prometheus_client) Analyze with pana
-        run: pana .
-        working-directory: prometheus_client
-      - name: (prometheus_client_shelf) Analyze with pana
-        run: pana .
-        working-directory: prometheus_client_shelf
-
-      - name: (prometheus_client) Dry-run publish
-        run: dart pub publish --dry-run
-        # Control dry run via ${{ !github.event.release }}
-        working-directory: prometheus_client
       - name: (prometheus_client_shelf) Dry-run publish
         run: dart pub publish --dry-run
-        # Control dry run via ${{ !github.event.release }}
+        working-directory: prometheus_client_shelf
+      - name: (prometheus_client_shelf) Publish
+        run: dart pub publish
+        if: github.event.release
         working-directory: prometheus_client_shelf
