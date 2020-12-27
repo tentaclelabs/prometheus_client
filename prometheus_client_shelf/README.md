@@ -28,8 +28,10 @@ main() async {
   
   // Create a metric of type counter. 
   // Always register your metric, either at the default registry or a custom one.
-  final greetingCounter =
-      Counter('greetings_total', 'The total amount of greetings')..register();
+  final greetingCounter = Counter(
+    name: 'greetings_total', 
+    help: 'The total amount of greetings',
+  )..register();
   final app = Router();
 
   app.get('/hello', (shelf.Request request) {
