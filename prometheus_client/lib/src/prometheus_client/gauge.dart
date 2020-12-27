@@ -5,8 +5,11 @@ class Gauge extends _SimpleCollector<GaugeChild> {
   /// Construct a new [Gauge] with a [name], [help] text and optional
   /// [labelNames].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
-  Gauge(String name, String help, {List<String> labelNames = const []})
-      : super(name, help, labelNames: labelNames);
+  Gauge({
+    required String name,
+    required String help,
+    List<String> labelNames = const [],
+  }) : super(name: name, help: help, labelNames: labelNames);
 
   /// Increment the [value] of the gauge without labels by [amount].
   /// Increments by one, if no amount is provided.

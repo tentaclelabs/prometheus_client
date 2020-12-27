@@ -1,6 +1,11 @@
+## 0.5.0-nullsafety.0
+
+- Migrate to null-safety.
+- Change all metrics constructors to take `name` and `help` as required named parameters.
+
 ## 0.4.1
 
-- `counter.inc()` should only allow to increment by values greather than zero.
+- `counter.inc()` should only allow to increment by values greater than zero.
 
 ## 0.4.0+4
 

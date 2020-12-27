@@ -32,14 +32,16 @@ class Histogram extends _SimpleCollector<HistogramChild> {
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
   /// [buckets] have to be sorted in ascending order. If no buckets are provided
   /// the [defaultBuckets] are used instead.
-  Histogram(String name, String help,
-      {List<String> labelNames = const [],
-      List<double> buckets = defaultBuckets})
-      : buckets = List.unmodifiable(_sanitizeBuckets(buckets)),
-        super(name, help, labelNames: labelNames) {
+  Histogram({
+    required String name,
+    required String help,
+    List<String> labelNames = const [],
+    List<double> buckets = defaultBuckets,
+  })  : buckets = List.unmodifiable(_sanitizeBuckets(buckets)),
+        super(name: name, help: help, labelNames: labelNames) {
     if (labelNames.contains(leLabel)) {
       throw ArgumentError.value(labelNames, 'labelNames',
-          '"le" is a reseved label name for a histogram.');
+          '"le" is a reserved label name for a histogram.');
     }
   }
 
@@ -47,25 +49,37 @@ class Histogram extends _SimpleCollector<HistogramChild> {
   /// [labelNames]. The [count] buckets are linear distributed starting at
   /// [start] with a distance of [width].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
-  Histogram.linear(
-      String name, String help, double start, double width, int count,
-      {List<String> labelNames = const []})
-      : this(name, help,
-            labelNames: labelNames,
-            buckets:
-                List.unmodifiable(_generateLinearBuckets(start, width, count)));
+  Histogram.linear({
+    required String name,
+    required String help,
+    required double start,
+    required double width,
+    required int count,
+    List<String> labelNames = const [],
+  }) : this(
+          name: name,
+          help: help,
+          labelNames: labelNames,
+          buckets: _generateLinearBuckets(start, width, count),
+        );
 
   /// Construct a new [Histogram] with a [name], [help] text, and optional
   /// [labelNames]. The [count] buckets are exponential distributed starting at
   /// [start] with a distance growing exponentially by [factor].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
-  Histogram.exponential(
-      String name, String help, double start, double factor, int count,
-      {List<String> labelNames = const []})
-      : this(name, help,
-            labelNames: labelNames,
-            buckets: List.unmodifiable(
-                _generateExponentialBuckets(start, factor, count)));
+  Histogram.exponential({
+    required String name,
+    required String help,
+    required double start,
+    required double factor,
+    required int count,
+    List<String> labelNames = const [],
+  }) : this(
+          name: name,
+          help: help,
+          labelNames: labelNames,
+          buckets: _generateExponentialBuckets(start, factor, count),
+        );
 
   /// Observe a new value [v] and store it in the corresponding buckets of a
   /// histogram without labels.

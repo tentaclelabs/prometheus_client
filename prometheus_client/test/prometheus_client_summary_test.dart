@@ -5,7 +5,7 @@ void main() {
   group('Summary', () {
     test('Should register summary at registry', () {
       final collectorRegistry = CollectorRegistry();
-      Summary('my_metric', 'Help!').register(collectorRegistry);
+      Summary(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
           collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
@@ -14,15 +14,20 @@ void main() {
     });
 
     test('Should fail if labels contain "quantile"', () {
-      expect(() => Summary('my_metric', 'Help!', labelNames: ['quantile']),
+      expect(
+          () => Summary(
+              name: 'my_metric', help: 'Help!', labelNames: ['quantile']),
           throwsArgumentError);
     });
 
     test('Should initialize summary with quantiles, maxAge and ageBuckets', () {
-      final summary = Summary('my_metric', 'Help!',
-          quantiles: [Quantile(0.9, 0.1)],
-          maxAge: Duration(seconds: 1),
-          ageBuckets: 10);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        quantiles: [Quantile(0.9, 0.1)],
+        maxAge: Duration(seconds: 1),
+        ageBuckets: 10,
+      );
 
       expect(summary.quantiles.first.quantile, equals(0.9));
       expect(summary.quantiles.first.error, equals(0.1));
@@ -32,8 +37,11 @@ void main() {
     });
 
     test('Should initialize summary with 0', () {
-      final summary =
-          Summary('my_metric', 'Help!', quantiles: [Quantile(0.9, 0.1)]);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        quantiles: [Quantile(0.9, 0.1)],
+      );
 
       expect(summary.sum, equals(0.0));
       expect(summary.count, equals(0.0));
@@ -41,8 +49,11 @@ void main() {
     });
 
     test('Should observe values and update summary', () {
-      final summary =
-          Summary('my_metric', 'Help!', quantiles: [Quantile(0.5, 0.1)]);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        quantiles: [Quantile(0.5, 0.1)],
+      );
 
       summary.observe(1);
       summary.observe(2);
@@ -55,8 +66,11 @@ void main() {
     });
 
     test('Should observe duration of callback', () {
-      final summary =
-          Summary('my_metric', 'Help!', quantiles: [Quantile(0.9, 0.1)]);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        quantiles: [Quantile(0.9, 0.1)],
+      );
 
       summary.observeDurationSync(() => {});
 
@@ -66,8 +80,11 @@ void main() {
     });
 
     test('Should observe duration of future', () async {
-      final summary =
-          Summary('my_metric', 'Help!', quantiles: [Quantile(0.9, 0.1)]);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        quantiles: [Quantile(0.9, 0.1)],
+      );
 
       await summary
           .observeDuration(Future.delayed(Duration(milliseconds: 350)));
@@ -79,14 +96,17 @@ void main() {
 
     test('Should not allow to set label values if no labels were specified',
         () {
-      final summary = Summary('my_metric', 'Help!');
+      final summary = Summary(name: 'my_metric', help: 'Help!');
 
       expect(() => summary.labels(['not_allowed']), throwsArgumentError);
     });
 
     test('Should collect samples for metric without labels', () {
-      final summary = Summary('my_metric', 'Help!',
-          quantiles: [Quantile(0.9, 0.1), Quantile(0.99, 0.01)]);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        quantiles: [Quantile(0.9, 0.1), Quantile(0.99, 0.01)],
+      );
       final samples = summary.collect().toList().expand((m) => m.samples);
       final sampleSum = samples.firstWhere((s) => s.name == 'my_metric_sum');
       final sampleCount =
@@ -105,7 +125,11 @@ void main() {
     });
 
     test('Should get child for specified labels', () {
-      final summary = Summary('my_metric', 'Help!', labelNames: ['name']);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        labelNames: ['name'],
+      );
       final child = summary.labels(['mine']);
 
       expect(child, isNotNull);
@@ -115,22 +139,32 @@ void main() {
     });
 
     test('Should fail if wrong amount of labels specified', () {
-      final summary =
-          Summary('my_metric', 'Help!', labelNames: ['name', 'state']);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        labelNames: ['name', 'state'],
+      );
 
       expect(() => summary.labels(['mine']), throwsArgumentError);
     });
 
     test('Should fail if labels specified but used without labels', () {
-      final summary = Summary('my_metric', 'Help!', labelNames: ['name']);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        labelNames: ['name'],
+      );
 
       expect(() => summary.observe(1.0), throwsStateError);
     });
 
     test('Should collect samples for metric with labels', () {
-      final summary = Summary('my_metric', 'Help!',
-          labelNames: ['name'],
-          quantiles: [Quantile(0.9, 0.1), Quantile(0.99, 0.01)]);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        labelNames: ['name'],
+        quantiles: [Quantile(0.9, 0.1), Quantile(0.99, 0.01)],
+      );
       summary.labels(['mine']);
       final samples = summary.collect().toList().expand((m) => m.samples);
       final sampleSum = samples.firstWhere((s) => s.name == 'my_metric_sum');
@@ -150,7 +184,11 @@ void main() {
     });
 
     test('Should remove a child', () {
-      final summary = Summary('my_metric', 'Help!', labelNames: ['name']);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        labelNames: ['name'],
+      );
       summary.labels(['yours']);
       summary.labels(['mine']);
       summary.remove(['mine']);
@@ -165,7 +203,11 @@ void main() {
     });
 
     test('Should clear all children', () {
-      final summary = Summary('my_metric', 'Help!', labelNames: ['name']);
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        labelNames: ['name'],
+      );
       summary.labels(['yours']);
       summary.labels(['mine']);
       summary.clear();

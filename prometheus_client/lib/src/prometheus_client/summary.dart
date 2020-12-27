@@ -27,16 +27,18 @@ class Summary extends _SimpleCollector<SummaryChild> {
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
   /// If no [quantiles] are provided the summary only has a count and sum.
   /// If not provided, [maxAge] defaults to 10 minutes and [ageBuckets] to 5.
-  Summary(String name, String help,
-      {List<String> labelNames = const [],
-      List<Quantile> quantiles = const [],
-      this.maxAge = const Duration(minutes: 10),
-      this.ageBuckets = 5})
-      : quantiles = List.unmodifiable(quantiles),
-        super(name, help, labelNames: labelNames) {
+  Summary({
+    required String name,
+    required String help,
+    List<String> labelNames = const [],
+    List<Quantile> quantiles = const [],
+    this.maxAge = const Duration(minutes: 10),
+    this.ageBuckets = 5,
+  })  : quantiles = List.unmodifiable(quantiles),
+        super(name: name, help: help, labelNames: labelNames) {
     if (labelNames.contains(quantileLabel)) {
       throw ArgumentError.value(labelNames, 'labelNames',
-          '"quantile" is a reseved label name for a summary.');
+          '"quantile" is a reserved label name for a summary.');
     }
   }
 

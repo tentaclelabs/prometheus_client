@@ -1,3 +1,7 @@
+## 0.5.0-nullsafety.0
+
+- Migrate to null-safety.
+
 ## 0.4.1
 
 No changes

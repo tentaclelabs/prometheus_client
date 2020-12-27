@@ -5,8 +5,11 @@ class Counter extends _SimpleCollector<CounterChild> {
   /// Construct a new [Counter] with a [name], [help] text and optional
   /// [labelNames].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
-  Counter(String name, String help, {List<String> labelNames = const []})
-      : super(name, help, labelNames: labelNames);
+  Counter({
+    required String name,
+    required String help,
+    List<String> labelNames = const [],
+  }) : super(name: name, help: help, labelNames: labelNames);
 
   /// Increment the [value] of the counter without labels by [amount].
   /// Increments by one, if no amount is provided.

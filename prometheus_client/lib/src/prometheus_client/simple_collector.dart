@@ -14,10 +14,13 @@ abstract class _SimpleCollector<Child> extends Collector {
   final _children = HashMap<List<String>, Child>(
       equals: _eq.equals, hashCode: _eq.hash, isValidKey: _eq.isValidKey);
 
-  _SimpleCollector(this.name, this.help, {List<String> labelNames = const []})
-      : labelNames = List.unmodifiable(labelNames) {
-    _checkMetricName(name);
-    labelNames.forEach(_checkMetricLabelName);
+  _SimpleCollector({
+    required this.name,
+    required this.help,
+    List<String> labelNames = const [],
+  }) : labelNames = List.unmodifiable(labelNames) {
+    checkMetricName(name);
+    labelNames.forEach(checkMetricLabelName);
     _initializeNoLabelChild();
   }
 
