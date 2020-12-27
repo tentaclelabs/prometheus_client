@@ -1,5 +1,5 @@
 /// A library to export metrics in the Prometheus text representation.
-library format;
+library prometheus_client.format;
 
 import 'package:prometheus_client/prometheus_client.dart';
 import 'package:prometheus_client/src/double_format.dart';

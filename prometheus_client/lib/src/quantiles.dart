@@ -1,5 +1,3 @@
-library quantiles;
-
 import 'dart:typed_data';
 
 /// Defines a quantile.

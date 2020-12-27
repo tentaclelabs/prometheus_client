@@ -11,13 +11,14 @@ Future main() async {
   // Create a Histogram metrics without labels. Always register your metric,
   // either at the default registry or a custom one.
   final durationHistogram = Histogram(
-    'http_request_duration_seconds',
-    'The duration of http requests in seconds.',
+    name: 'http_request_duration_seconds',
+    help: 'The duration of http requests in seconds.',
   )..register();
 
   // Create a metric of type counter, with a label for the requested path:
   final metricRequestsCounter = Counter(
-      'metric_requests_total', 'The total amount of requests of the metrics.',
+      name: 'metric_requests_total',
+      help: 'The total amount of requests of the metrics.',
       labelNames: ['path'])
     ..register();
 

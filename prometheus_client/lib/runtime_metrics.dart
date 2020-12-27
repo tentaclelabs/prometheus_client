@@ -1,5 +1,5 @@
 /// A library exposing metrics of the Dart runtime.
-library runtime_metrics;
+library prometheus_client.runtime_metrics;
 
 import 'dart:io';
 import 'package:prometheus_client/prometheus_client.dart';

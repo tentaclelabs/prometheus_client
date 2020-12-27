@@ -1,5 +1,3 @@
-library double_format;
-
 String formatDouble(double value) {
   if (value.isInfinite) {
     if (value.isNegative) {

@@ -8,18 +8,18 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
-import 'package:prometheus_client/src/double_format.dart';
-import 'package:prometheus_client/src/quantiles.dart';
 
-export 'package:prometheus_client/src/quantiles.dart' show Quantile;
+import 'src/double_format.dart';
+import 'src/quantiles.dart';
+import 'src/validation_helper.dart';
+
+export 'src/quantiles.dart' show Quantile;
 
 part 'src/prometheus_client/collector.dart';
 
 part 'src/prometheus_client/counter.dart';
 
 part 'src/prometheus_client/gauge.dart';
-
-part 'src/prometheus_client/helper.dart';
 
 part 'src/prometheus_client/histogram.dart';
 

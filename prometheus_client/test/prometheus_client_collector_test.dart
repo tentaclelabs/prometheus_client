@@ -5,7 +5,7 @@ void main() {
   group('Collector', () {
     test('Should register collector', () {
       final collectorRegistry = CollectorRegistry();
-      collectorRegistry.register(Gauge('my_metric', 'Help!'));
+      collectorRegistry.register(Gauge(name: 'my_metric', help: 'Help!'));
 
       final metricFamilySamples =
           collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
@@ -15,8 +15,8 @@ void main() {
 
     test('Should register multiple collector', () {
       final collectorRegistry = CollectorRegistry();
-      collectorRegistry.register(Gauge('my_metric', 'Help!'));
-      collectorRegistry.register(Gauge('my_other_metric', 'Help!'));
+      collectorRegistry.register(Gauge(name: 'my_metric', help: 'Help!'));
+      collectorRegistry.register(Gauge(name: 'my_other_metric', help: 'Help!'));
 
       final metricFamilySamples =
           collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
@@ -27,17 +27,19 @@ void main() {
 
     test('Should not register collector with conflicting name', () {
       final collectorRegistry = CollectorRegistry();
-      collectorRegistry.register(Gauge('my_metric', 'Help!'));
+      collectorRegistry.register(Gauge(name: 'my_metric', help: 'Help!'));
 
-      expect(() => collectorRegistry.register(Histogram('my_metric', 'Help!')),
+      expect(
+          () => collectorRegistry
+              .register(Histogram(name: 'my_metric', help: 'Help!')),
           throwsArgumentError);
     });
 
     test('Should unregister collector', () {
       final collectorRegistry = CollectorRegistry();
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
       collectorRegistry.register(gauge);
-      collectorRegistry.register(Gauge('my_other_metric', 'Help!'));
+      collectorRegistry.register(Gauge(name: 'my_other_metric', help: 'Help!'));
 
       collectorRegistry.unregister(gauge);
 
@@ -49,9 +51,9 @@ void main() {
 
     test('Should re-register collector', () {
       final collectorRegistry = CollectorRegistry();
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
       collectorRegistry.register(gauge);
-      collectorRegistry.register(Gauge('my_other_metric', 'Help!'));
+      collectorRegistry.register(Gauge(name: 'my_other_metric', help: 'Help!'));
 
       collectorRegistry.unregister(gauge);
       collectorRegistry.register(gauge);
@@ -65,7 +67,8 @@ void main() {
 
     test('Should collect samples', () {
       final collectorRegistry = CollectorRegistry();
-      collectorRegistry.register(Gauge('my_metric', 'Help!')..value = 42.0);
+      collectorRegistry
+          .register(Gauge(name: 'my_metric', help: 'Help!')..value = 42.0);
 
       final metricFamilySample =
           collectorRegistry.collectMetricFamilySamples().first;

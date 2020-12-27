@@ -5,7 +5,7 @@ void main() {
   group('Gauge', () {
     test('Should register gauge at registry', () {
       final collectorRegistry = CollectorRegistry();
-      Gauge('my_metric', 'Help!').register(collectorRegistry);
+      Gauge(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
           collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
@@ -14,13 +14,13 @@ void main() {
     });
 
     test('Should initialize gauge with 0', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       expect(gauge.value, equals(0.0));
     });
 
     test('Should increment by one if no amount is specified', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       gauge.inc();
 
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('Should increment by amount', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       gauge.inc(42.0);
 
@@ -36,7 +36,7 @@ void main() {
     });
 
     test('Should decrement by one if no amount is specified', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       gauge.dec();
 
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('Should decrement by amount', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       gauge.dec(42.0);
 
@@ -52,7 +52,7 @@ void main() {
     });
 
     test('Should set to value', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       gauge.value = 42.0;
 
@@ -60,7 +60,7 @@ void main() {
     });
 
     test('Should set to current time', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       gauge.setToCurrentTime();
 
@@ -70,13 +70,13 @@ void main() {
 
     test('Should not allow to set label values if no labels were specified',
         () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
 
       expect(() => gauge.labels(['not_allowed']), throwsArgumentError);
     });
 
     test('Should collect samples for metric without labels', () {
-      final gauge = Gauge('my_metric', 'Help!');
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
       final sample = gauge.collect().toList().expand((m) => m.samples).first;
 
       expect(sample.name, equals('my_metric'));
@@ -86,7 +86,8 @@ void main() {
     });
 
     test('Should get child for specified labels', () {
-      final gauge = Gauge('my_metric', 'Help!', labelNames: ['name']);
+      final gauge =
+          Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       final child = gauge.labels(['mine']);
 
       expect(child, isNotNull);
@@ -94,19 +95,22 @@ void main() {
     });
 
     test('Should fail if wrong amount of labels specified', () {
-      final gauge = Gauge('my_metric', 'Help!', labelNames: ['name', 'state']);
+      final gauge = Gauge(
+          name: 'my_metric', help: 'Help!', labelNames: ['name', 'state']);
 
       expect(() => gauge.labels(['mine']), throwsArgumentError);
     });
 
     test('Should fail if labels specified but used without labels', () {
-      final gauge = Gauge('my_metric', 'Help!', labelNames: ['name']);
+      final gauge =
+          Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
 
       expect(() => gauge.inc(), throwsStateError);
     });
 
     test('Should collect samples for metric with labels', () {
-      final gauge = Gauge('my_metric', 'Help!', labelNames: ['name']);
+      final gauge =
+          Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       gauge.labels(['mine']);
       final sample = gauge.collect().toList().expand((m) => m.samples).first;
 
@@ -117,7 +121,8 @@ void main() {
     });
 
     test('Should remove a child', () {
-      final gauge = Gauge('my_metric', 'Help!', labelNames: ['name']);
+      final gauge =
+          Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       gauge.labels(['yours']);
       gauge.labels(['mine']);
       gauge.remove(['mine']);
@@ -132,7 +137,8 @@ void main() {
     });
 
     test('Should clear all children', () {
-      final gauge = Gauge('my_metric', 'Help!', labelNames: ['name']);
+      final gauge =
+          Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       gauge.labels(['yours']);
       gauge.labels(['mine']);
       gauge.clear();

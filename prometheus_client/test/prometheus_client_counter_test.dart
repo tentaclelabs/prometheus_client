@@ -5,7 +5,7 @@ void main() {
   group('Counter', () {
     test('Should register counter at registry', () {
       final collectorRegistry = CollectorRegistry();
-      Counter('my_metric', 'Help!').register(collectorRegistry);
+      Counter(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
           collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
@@ -14,13 +14,13 @@ void main() {
     });
 
     test('Should initialize counter with 0', () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
 
       expect(counter.value, equals(0.0));
     });
 
     test('Should increment by one if no amount is specified', () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
 
       counter.inc();
 
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('Should increment by amount', () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
 
       counter.inc(42.0);
 
@@ -36,26 +36,26 @@ void main() {
     });
 
     test('Should not increment by negative amount', () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
 
       expect(() => counter.inc(-42.0), throwsArgumentError);
     });
 
     test('Should not increment by zero', () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
 
       expect(() => counter.inc(0.0), throwsArgumentError);
     });
 
     test('Should not allow to set label values if no labels were specified',
         () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
 
       expect(() => counter.labels(['not_allowed']), throwsArgumentError);
     });
 
     test('Should collect samples for metric without labels', () {
-      final counter = Counter('my_metric', 'Help!');
+      final counter = Counter(name: 'my_metric', help: 'Help!');
       final sample = counter.collect().toList().expand((m) => m.samples).first;
 
       expect(sample.name, equals('my_metric'));
@@ -65,7 +65,8 @@ void main() {
     });
 
     test('Should get child for specified labels', () {
-      final counter = Counter('my_metric', 'Help!', labelNames: ['name']);
+      final counter =
+          Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       final child = counter.labels(['mine']);
 
       expect(child, isNotNull);
@@ -73,20 +74,22 @@ void main() {
     });
 
     test('Should fail if wrong amount of labels specified', () {
-      final counter =
-          Counter('my_metric', 'Help!', labelNames: ['name', 'state']);
+      final counter = Counter(
+          name: 'my_metric', help: 'Help!', labelNames: ['name', 'state']);
 
       expect(() => counter.labels(['mine']), throwsArgumentError);
     });
 
     test('Should fail if labels specified but used without labels', () {
-      final counter = Counter('my_metric', 'Help!', labelNames: ['name']);
+      final counter =
+          Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
 
       expect(() => counter.inc(), throwsStateError);
     });
 
     test('Should collect samples for metric with labels', () {
-      final counter = Counter('my_metric', 'Help!', labelNames: ['name']);
+      final counter =
+          Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       counter.labels(['mine']);
       final sample = counter.collect().toList().expand((m) => m.samples).first;
 
@@ -97,7 +100,8 @@ void main() {
     });
 
     test('Should remove a child', () {
-      final counter = Counter('my_metric', 'Help!', labelNames: ['name']);
+      final counter =
+          Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       counter.labels(['yours']);
       counter.labels(['mine']);
       counter.remove(['mine']);
@@ -112,7 +116,8 @@ void main() {
     });
 
     test('Should clear all children', () {
-      final counter = Counter('my_metric', 'Help!', labelNames: ['name']);
+      final counter =
+          Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       counter.labels(['yours']);
       counter.labels(['mine']);
       counter.clear();
