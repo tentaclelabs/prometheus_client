@@ -1,6 +1,6 @@
 ## 0.5.0-nullsafety.0
 
-- Migrate to null-safety.
+- Integrate the latest `prometheus_client` version.
 
 ## 0.4.1
 
@@ -10,21 +10,17 @@ No changes
 
 - Moved to new org [tentaclelabs](https://github.com/tentaclelabs)
 
-
 ## 0.4.0+3
 
 - Remove author from pubspec.
-
 
 ## 0.4.0+2
 
 - Fix some analyzer issues, no functional changes.
 
-
 ## 0.4.0+1
 
 - Align version constraint to `prometheus_client_shelf`.
-
 
 ## 0.4.0
 
