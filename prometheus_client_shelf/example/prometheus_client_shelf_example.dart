@@ -15,14 +15,20 @@ void main() async {
   // accessed. Always register your metric, either at the default registry or a
   // custom one.
   final timeGauge = Gauge(
-      'last_accessed_time', 'The last time the hello endpoint was accessed',
-      labelNames: ['endpoint'])
-    ..register();
+    name: 'last_accessed_time',
+    help: 'The last time the hello endpoint was accessed',
+    labelNames: ['endpoint'],
+  )..register();
   // Create a gauge metric without labels to store the last rolled value
-  final rollGauge = Gauge('roll_value', 'The last roll value')..register();
+  final rollGauge = Gauge(
+    name: 'roll_value',
+    help: 'The last roll value',
+  )..register();
   // Create a metric of type counter
-  final greetingCounter =
-      Counter('greetings_total', 'The total amount of greetings')..register();
+  final greetingCounter = Counter(
+    name: 'greetings_total',
+    help: 'The total amount of greetings',
+  )..register();
 
   final app = Router();
 
@@ -53,7 +59,7 @@ void main() async {
       // Register a middleware to track request times
       .addMiddleware(shelf_metrics.register())
       .addMiddleware(shelf.logRequests())
-      .addHandler(app.handler);
+      .addHandler(app);
   var server = await io.serve(handler, 'localhost', 8080);
 
   print('Serving at http://${server.address.host}:${server.port}');

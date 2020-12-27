@@ -6,7 +6,7 @@ void main() {
   group('Shelf Handler', () {
     test('Should output metrics', () async {
       final collectorRegistry = CollectorRegistry();
-      Gauge('my_metric', 'Help text')
+      Gauge(name: 'my_metric', help: 'Help text')
         ..register(collectorRegistry)
         ..inc();
 

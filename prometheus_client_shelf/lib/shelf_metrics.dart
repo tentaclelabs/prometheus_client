@@ -8,9 +8,11 @@ import 'package:prometheus_client/prometheus_client.dart';
 /// can be added to the [shelf.Pipeline]. If no [registry] is provided, the
 /// [CollectorRegistry.defaultRegistry] is used.
 shelf.Middleware register([CollectorRegistry registry]) {
-  final histogram = Histogram('http_request_duration_seconds',
-      'A histogram of the HTTP request durations.',
-      labelNames: ['method', 'code']);
+  final histogram = Histogram(
+    name: 'http_request_duration_seconds',
+    help: 'A histogram of the HTTP request durations.',
+    labelNames: ['method', 'code'],
+  );
 
   registry ??= CollectorRegistry.defaultRegistry;
   registry.register(histogram);
