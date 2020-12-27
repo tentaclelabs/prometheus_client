@@ -1,0 +1,52 @@
+name: Publish packages
+
+on:
+  release:
+    types: [ published ]
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  PUB_ENVIRONMENT: bot.github
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v0.1
+        with:
+          channel: dev
+      - name: Install pana
+        run: dart pub global activate pana
+      - name: Setup credentials
+        run: |
+          mkdir -p ~/.pub-cache && cat <<EOF > ~/.pub-cache/credentials.json
+          ${{ secrets.CREDENTIAL_JSON }}
+          EOF
+
+      - name: (prometheus_client) Install dependencies
+        run: dart pub get
+        working-directory: prometheus_client
+      - name: (prometheus_client_shelf) Install dependencies
+        run: dart pub get
+        working-directory: prometheus_client_shelf
+
+      - name: (prometheus_client) Analyze with pana
+        run: pana .
+        working-directory: prometheus_client
+      - name: (prometheus_client_shelf) Analyze with pana
+        run: pana .
+        working-directory: prometheus_client_shelf
+
+      - name: (prometheus_client) Dry-run publish
+        run: dart pub publish --dry-run
+        # Control dry run via ${{ !github.event.release }}
+        working-directory: prometheus_client
+      - name: (prometheus_client_shelf) Dry-run publish
+        run: dart pub publish --dry-run
+        # Control dry run via ${{ !github.event.release }}
+        working-directory: prometheus_client_shelf
