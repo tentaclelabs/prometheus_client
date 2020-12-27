@@ -37,8 +37,8 @@ jobs:
         run: dart analyze --fatal-infos
         working-directory: ${{ matrix.package }}
         if: always() && steps.install.outcome == 'success'
-      - name: Analyze code
-        run: dart pub global install pana && pana .
+      - name: Analyze with pana
+        run: dart pub global activate pana && pana .
         working-directory: ${{ matrix.package }}
         if: always() && steps.install.outcome == 'success'
 
