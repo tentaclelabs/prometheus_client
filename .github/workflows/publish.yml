@@ -33,7 +33,7 @@ jobs:
         run: dart pub publish --dry-run
         working-directory: prometheus_client
       - name: (prometheus_client_shelf) Publish
-        run: dart pub publish
+        run: dart pub publish --force
         if: github.event.release
         working-directory: prometheus_client
 
