@@ -1,5 +1,6 @@
 import 'package:prometheus_client/prometheus_client.dart';
 import 'package:prometheus_client_shelf/shelf_handler.dart' as shelf_handler;
+import 'package:shelf/shelf.dart' as shelf;
 import 'package:test/test.dart';
 
 void main() {
@@ -11,7 +12,8 @@ void main() {
         ..inc();
 
       final handler = shelf_handler.prometheusHandler(collectorRegistry);
-      final response = await handler(null);
+      final response = await handler(
+          shelf.Request('GET', Uri.parse('https://example.com/')));
 
       expect(response.statusCode, equals(200));
       expect(
