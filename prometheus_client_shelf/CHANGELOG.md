@@ -1,4 +1,4 @@
-## 0.5.0-nullsafety.0
+## 0.5.0
 
 - Integrate the latest `prometheus_client` version.
 

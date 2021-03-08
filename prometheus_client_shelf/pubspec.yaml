@@ -1,21 +1,21 @@
 name: prometheus_client_shelf
 description: Dart implementation of the Prometheus client library providing a shelf integration.
-version: 0.5.0-nullsafety.0
+version: 0.5.0
 homepage: https://github.com/tentaclelabs/prometheus_client
 
 environment:
   sdk: '>=2.5.0 <3.0.0'
 
 dependencies:
-  prometheus_client: ^0.5.0-nullsafety.0
-  shelf: ^1.0.0-nullsafety.0
-  collection: ^1.15.0-nullsafety.5
+  prometheus_client: ^0.5.0
+  shelf: ^1.0.0
+  collection: ^1.15.0
 
 dev_dependencies:
-  pedantic: ^1.10.0-nullsafety.3
-  test: ^1.16.0-nullsafety.10
+  pedantic: ^1.10.0
+  test: ^1.16.0
   # Dependency is required for the example
-  #shelf_router: ^0.7.1
+  shelf_router: ^1.0.0
 
 dependency_overrides:
   prometheus_client:
