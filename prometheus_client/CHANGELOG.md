@@ -1,4 +1,4 @@
-## 0.5.0-nullsafety.0
+## 0.5.0
 
 - Migrate to null-safety.
 - Change all metrics constructors to take `name` and `help` as required named parameters.

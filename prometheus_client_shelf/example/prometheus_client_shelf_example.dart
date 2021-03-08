@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:prometheus_client/prometheus_client.dart';
 import 'package:prometheus_client/runtime_metrics.dart' as runtime_metrics;
-import 'package:prometheus_client_shelf/shelf_metrics.dart' as shelf_metrics;
 import 'package:prometheus_client_shelf/shelf_handler.dart';
+import 'package:prometheus_client_shelf/shelf_metrics.dart' as shelf_metrics;
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
@@ -34,14 +34,14 @@ void main() async {
 
   app.get('/hello', (shelf.Request request) {
     // Set the current time to the time metric for the label 'hello'
-    timeGauge..labels(['hello']).setToCurrentTime();
+    timeGauge.labels(['hello']).setToCurrentTime();
     // Every time the hello is called, increase the counter by one
     greetingCounter.inc();
     return shelf.Response.ok('hello-world');
   });
 
   app.get('/roll', (shelf.Request request) {
-    timeGauge..labels(['roll']).setToCurrentTime();
+    timeGauge.labels(['roll']).setToCurrentTime();
     final value = Random().nextDouble();
     // Store the rolled value without labels
     rollGauge.value = value;

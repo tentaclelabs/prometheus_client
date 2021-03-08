@@ -1,14 +1,14 @@
 name: prometheus_client
 description: Dart implementation of the Prometheus client library providing metrics.
-version: 0.5.0-nullsafety.0
+version: 0.5.0
 homepage: https://github.com/tentaclelabs/prometheus_client
 
 environment:
-  sdk: '>=2.12.0-29.7.beta <3.0.0'
+  sdk: '>=2.12.0-0 <3.0.0'
 
 dependencies:
-  collection: ^1.15.0-nullsafety.5
+  collection: ^1.15.0
 
 dev_dependencies:
-  pedantic: ^1.10.0-nullsafety.3
-  test: ^1.16.0-nullsafety.10
+  pedantic: ^1.10.0
+  test: ^1.16.0
