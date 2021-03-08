@@ -12,7 +12,7 @@ void main() {
           Duration(milliseconds: 500), () => shelf.Response.ok('OK')));
 
       await handler(
-          shelf.Request('GET', Uri.tryParse('http://example.com/test')));
+          shelf.Request('GET', Uri.tryParse('http://example.com/test')!));
 
       final metricFamilySamples =
           collectorRegistry.collectMetricFamilySamples();

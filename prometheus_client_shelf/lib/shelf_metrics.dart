@@ -1,13 +1,13 @@
 /// A library to track request times for shelf servers.
 library shelf_metrics;
 
-import 'package:shelf/shelf.dart' as shelf;
 import 'package:prometheus_client/prometheus_client.dart';
+import 'package:shelf/shelf.dart' as shelf;
 
 /// Register default metrics for the shelf and returns a [shelf.Middleware] that
 /// can be added to the [shelf.Pipeline]. If no [registry] is provided, the
 /// [CollectorRegistry.defaultRegistry] is used.
-shelf.Middleware register([CollectorRegistry registry]) {
+shelf.Middleware register([CollectorRegistry? registry]) {
   final histogram = Histogram(
     name: 'http_request_duration_seconds',
     help: 'A histogram of the HTTP request durations.',
@@ -22,10 +22,8 @@ shelf.Middleware register([CollectorRegistry registry]) {
       var watch = Stopwatch()..start();
 
       return Future.sync(() => innerHandler(request)).then((response) {
-        if (response != null) {
-          histogram.labels([request.method, '${response.statusCode}']).observe(
-              watch.elapsedMicroseconds / Duration.microsecondsPerSecond);
-        }
+        histogram.labels([request.method, '${response.statusCode}']).observe(
+            watch.elapsedMicroseconds / Duration.microsecondsPerSecond);
 
         return response;
       }, onError: (error, StackTrace stackTrace) {
