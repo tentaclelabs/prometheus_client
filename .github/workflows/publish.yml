@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.1
         with:
-          channel: dev
+          channel: stable
       - name: Setup credentials
         run: |
           mkdir -p ~/.pub-cache && cat <<EOF > ~/.pub-cache/credentials.json
