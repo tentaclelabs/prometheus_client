@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [ dev ]
+        sdk: [ stable ]
         package: [ prometheus_client, prometheus_client_shelf ]
     steps:
       - uses: actions/checkout@v2
