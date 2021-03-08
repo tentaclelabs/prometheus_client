@@ -39,7 +39,7 @@ class Gauge extends _SimpleCollector<GaugeChild> {
   Iterable<MetricFamilySamples> collect() sync* {
     final samples = <Sample>[];
     _children.forEach((labelValues, child) =>
-        samples.add(Sample(name, labelNames, labelValues, child._value)));
+        samples.add(Sample(name, labelNames, labelValues, child.value)));
 
     yield MetricFamilySamples(name, MetricType.gauge, help, samples);
   }
@@ -50,31 +50,26 @@ class Gauge extends _SimpleCollector<GaugeChild> {
 
 /// Defines a [GaugeChild] of a [Gauge] with assigned [labelValues].
 class GaugeChild {
-  double _value = 0;
+  /// Accesses the current value of the gauge with labels.
+  double value = 0;
 
   GaugeChild._();
 
   /// Increment the [value] of the gauge with labels by [amount].
   /// Increments by one, if no amount is provided.
   void inc([double amount = 1]) {
-    _value += amount;
+    value += amount;
   }
 
   /// Decrement the [value] of the gauge with labels by [amount].
   /// Decrements by one, if no amount is provided.
   void dec([double amount = 1]) {
-    _value -= amount;
+    value -= amount;
   }
 
   /// Set the [value] of the gauge with labels to the current time as a unix
   /// timestamp.
   void setToCurrentTime() {
-    _value = DateTime.now().millisecondsSinceEpoch.toDouble();
+    value = DateTime.now().millisecondsSinceEpoch.toDouble();
   }
-
-  /// Accesses the current value of the gauge with labels.
-  double get value => _value;
-
-  /// Sets the current value of the gauge with labels.
-  set value(double v) => _value = v;
 }
