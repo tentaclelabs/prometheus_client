@@ -22,7 +22,7 @@ jobs:
         package: [ prometheus_client, prometheus_client_shelf ]
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1
         with:
           channel: ${{ matrix.sdk }}
       - id: install
@@ -57,7 +57,7 @@ jobs:
         package: [ prometheus_client, prometheus_client_shelf ]
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1
         with:
           channel: ${{ matrix.sdk }}
       - id: install
