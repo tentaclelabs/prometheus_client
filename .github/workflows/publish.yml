@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v0.1
+      - uses: dart-lang/setup-dart@v1
         with:
           channel: stable
       - name: Setup credentials
