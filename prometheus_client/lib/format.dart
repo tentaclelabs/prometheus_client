@@ -33,7 +33,7 @@ void write004(
           sink.write(sample.labelNames[i]);
           sink.write('="');
           _writeEscapedLabelValue(sink, sample.labelValues[i]);
-          sink.write('\",');
+          sink.write('",');
         }
         sink.write('}');
       }
