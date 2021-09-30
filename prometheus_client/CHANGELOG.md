@@ -1,3 +1,7 @@
+## 0.5.1
+
+- Migrate from `pedantic` to `lints`
+
 ## 0.5.0
 
 - Migrate to null-safety.
