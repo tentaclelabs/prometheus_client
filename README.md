@@ -1,6 +1,8 @@
 prometheus_client
 ===
 
+[![Dart CI](https://github.com/tentaclelabs/prometheus_client/actions/workflows/dart.yml/badge.svg)](https://github.com/tentaclelabs/prometheus_client/actions/workflows/dart.yml)
+
 This is a simple Dart implementation of the [Prometheus][prometheus] client library, [similar to libraries for other languages][writing_clientlibs].
 There are two packages:
 
