@@ -3,14 +3,20 @@ import 'package:test/test.dart';
 
 void main() {
   group('Gauge', () {
-    test('Should register gauge at registry', () {
+    test('Should register gauge at registry', () async {
       final collectorRegistry = CollectorRegistry();
       Gauge(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
+          await collectorRegistry.collectMetricFamilySamples();
 
-      expect(metricFamilySamples, contains('my_metric'));
+      expect(metricFamilySamples.map((m) => m.name), contains('my_metric'));
+    });
+
+    test('Should collect metric names', () {
+      final gauge = Gauge(name: 'my_metric', help: 'Help!');
+
+      expect(gauge.collectNames(), equals(['my_metric']));
     });
 
     test('Should initialize gauge with 0', () {
@@ -64,8 +70,10 @@ void main() {
 
       gauge.setToCurrentTime();
 
-      expect(gauge.value,
-          closeTo(DateTime.now().millisecondsSinceEpoch.toDouble(), 1000));
+      expect(
+        gauge.value,
+        closeTo(DateTime.now().millisecondsSinceEpoch.toDouble(), 1000),
+      );
     });
 
     test('Should not allow to set label values if no labels were specified',
@@ -75,9 +83,11 @@ void main() {
       expect(() => gauge.labels(['not_allowed']), throwsArgumentError);
     });
 
-    test('Should collect samples for metric without labels', () {
+    test('Should collect samples for metric without labels', () async {
       final gauge = Gauge(name: 'my_metric', help: 'Help!');
-      final sample = gauge.collect().toList().expand((m) => m.samples).first;
+      final metricFamilySamples = await gauge.collect();
+      final sample =
+          metricFamilySamples.toList().expand((m) => m.samples).first;
 
       expect(sample.name, equals('my_metric'));
       expect(sample.labelNames, isEmpty);
@@ -108,11 +118,13 @@ void main() {
       expect(() => gauge.inc(), throwsStateError);
     });
 
-    test('Should collect samples for metric with labels', () {
+    test('Should collect samples for metric with labels', () async {
       final gauge =
           Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       gauge.labels(['mine']);
-      final sample = gauge.collect().toList().expand((m) => m.samples).first;
+      final metricFamilySamples = await gauge.collect();
+      final sample =
+          metricFamilySamples.toList().expand((m) => m.samples).first;
 
       expect(sample.name, equals('my_metric'));
       expect(sample.labelNames, equals(['name']));
@@ -120,14 +132,14 @@ void main() {
       expect(sample.value, equals(0.0));
     });
 
-    test('Should remove a child', () {
+    test('Should remove a child', () async {
       final gauge =
           Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       gauge.labels(['yours']);
       gauge.labels(['mine']);
       gauge.remove(['mine']);
-      final labelValues = gauge
-          .collect()
+      final metricFamilySamples = await gauge.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
@@ -136,20 +148,36 @@ void main() {
       expect(labelValues, containsAll(['yours']));
     });
 
-    test('Should clear all children', () {
+    test('Should clear all children', () async {
       final gauge =
           Gauge(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       gauge.labels(['yours']);
       gauge.labels(['mine']);
       gauge.clear();
-      final labelValues = gauge
-          .collect()
+      final metricFamilySamples = await gauge.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
           .expand((l) => l);
 
       expect(labelValues, isEmpty);
+    });
+
+    test('Should call collect callback on collect', () async {
+      final gauge = Gauge(
+        name: 'my_metric',
+        help: 'Help!',
+        collectCallback: (gauge) {
+          gauge.value = 1337;
+        },
+      );
+      final metricFamilySamples = await gauge.collect();
+      final sample =
+          metricFamilySamples.toList().expand((m) => m.samples).first;
+
+      expect(sample.name, equals('my_metric'));
+      expect(sample.value, equals(1337.0));
     });
   });
 }

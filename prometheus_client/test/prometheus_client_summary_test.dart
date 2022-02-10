@@ -3,21 +3,31 @@ import 'package:test/test.dart';
 
 void main() {
   group('Summary', () {
-    test('Should register summary at registry', () {
+    test('Should register summary at registry', () async {
       final collectorRegistry = CollectorRegistry();
       Summary(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
+          await collectorRegistry.collectMetricFamilySamples();
 
-      expect(metricFamilySamples, contains('my_metric'));
+      expect(metricFamilySamples.map((m) => m.name), contains('my_metric'));
+    });
+
+    test('Should collect metric names', () {
+      final summary = Summary(name: 'my_metric', help: 'Help!');
+
+      expect(
+        summary.collectNames(),
+        equals(['my_metric_count', 'my_metric_sum', 'my_metric']),
+      );
     });
 
     test('Should fail if labels contain "quantile"', () {
       expect(
-          () => Summary(
-              name: 'my_metric', help: 'Help!', labelNames: ['quantile']),
-          throwsArgumentError);
+        () =>
+            Summary(name: 'my_metric', help: 'Help!', labelNames: ['quantile']),
+        throwsArgumentError,
+      );
     });
 
     test('Should initialize summary with quantiles, maxAge and ageBuckets', () {
@@ -101,13 +111,14 @@ void main() {
       expect(() => summary.labels(['not_allowed']), throwsArgumentError);
     });
 
-    test('Should collect samples for metric without labels', () {
+    test('Should collect samples for metric without labels', () async {
       final summary = Summary(
         name: 'my_metric',
         help: 'Help!',
         quantiles: [Quantile(0.9, 0.1), Quantile(0.99, 0.01)],
       );
-      final samples = summary.collect().toList().expand((m) => m.samples);
+      final metricFamilySamples = await summary.collect();
+      final samples = metricFamilySamples.toList().expand((m) => m.samples);
       final sampleSum = samples.firstWhere((s) => s.name == 'my_metric_sum');
       final sampleCount =
           samples.firstWhere((s) => s.name == 'my_metric_count');
@@ -158,7 +169,7 @@ void main() {
       expect(() => summary.observe(1.0), throwsStateError);
     });
 
-    test('Should collect samples for metric with labels', () {
+    test('Should collect samples for metric with labels', () async {
       final summary = Summary(
         name: 'my_metric',
         help: 'Help!',
@@ -166,7 +177,8 @@ void main() {
         quantiles: [Quantile(0.9, 0.1), Quantile(0.99, 0.01)],
       );
       summary.labels(['mine']);
-      final samples = summary.collect().toList().expand((m) => m.samples);
+      final metricFamilySamples = await summary.collect();
+      final samples = metricFamilySamples.toList().expand((m) => m.samples);
       final sampleSum = samples.firstWhere((s) => s.name == 'my_metric_sum');
       final sampleCount =
           samples.firstWhere((s) => s.name == 'my_metric_count');
@@ -183,7 +195,7 @@ void main() {
       expect(sampleQuantiles, hasLength(2));
     });
 
-    test('Should remove a child', () {
+    test('Should remove a child', () async {
       final summary = Summary(
         name: 'my_metric',
         help: 'Help!',
@@ -192,8 +204,8 @@ void main() {
       summary.labels(['yours']);
       summary.labels(['mine']);
       summary.remove(['mine']);
-      final labelValues = summary
-          .collect()
+      final metricFamilySamples = await summary.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
@@ -202,7 +214,7 @@ void main() {
       expect(labelValues, containsAll(['yours']));
     });
 
-    test('Should clear all children', () {
+    test('Should clear all children', () async {
       final summary = Summary(
         name: 'my_metric',
         help: 'Help!',
@@ -211,14 +223,33 @@ void main() {
       summary.labels(['yours']);
       summary.labels(['mine']);
       summary.clear();
-      final labelValues = summary
-          .collect()
+      final metricFamilySamples = await summary.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
           .expand((l) => l);
 
       expect(labelValues, isEmpty);
+    });
+
+    test('Should call collect callback on collect', () async {
+      final summary = Summary(
+        name: 'my_metric',
+        help: 'Help!',
+        collectCallback: (summary) {
+          summary.observe(1337);
+        },
+      );
+      final metricFamilySamples = await summary.collect();
+      final sample = metricFamilySamples
+          .toList()
+          .expand((m) => m.samples)
+          .where((s) => s.name == 'my_metric_sum')
+          .first;
+
+      expect(sample.name, equals('my_metric_sum'));
+      expect(sample.value, equals(1337.0));
     });
   });
 }

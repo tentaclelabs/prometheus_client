@@ -4,11 +4,25 @@ import 'package:test/test.dart';
 
 void main() {
   group('Runtime Metrics', () {
-    test('Should output dart_info metric', () {
+    test('Should collect metric names', () {
+      final runtimeCollector = runtime_metrics.RuntimeCollector();
+      final metricNames = runtimeCollector.collectNames();
+
+      expect(
+        metricNames,
+        equals([
+          'dart_info',
+          'process_resident_memory_bytes',
+          'process_start_time_seconds',
+        ]),
+      );
+    });
+
+    test('Should output dart_info metric', () async {
       final collectorRegistry = CollectorRegistry();
       runtime_metrics.register(collectorRegistry);
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples();
+          await collectorRegistry.collectMetricFamilySamples();
       final dartInfoMetric =
           metricFamilySamples.where((m) => m.name == 'dart_info').first;
 
@@ -25,11 +39,11 @@ void main() {
       expect(dartInfoSample.value, equals(1.0));
     });
 
-    test('Should output process_resident_memory_bytes metric', () {
+    test('Should output process_resident_memory_bytes metric', () async {
       final collectorRegistry = CollectorRegistry();
       runtime_metrics.register(collectorRegistry);
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples();
+          await collectorRegistry.collectMetricFamilySamples();
       final dartInfoMetric = metricFamilySamples
           .where((m) => m.name == 'process_resident_memory_bytes')
           .first;
@@ -47,11 +61,11 @@ void main() {
       expect(dartInfoSample.value, greaterThan(0));
     });
 
-    test('Should output process_start_time_seconds metric', () {
+    test('Should output process_start_time_seconds metric', () async {
       final collectorRegistry = CollectorRegistry();
       runtime_metrics.register(collectorRegistry);
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples();
+          await collectorRegistry.collectMetricFamilySamples();
       final dartInfoMetric = metricFamilySamples
           .where((m) => m.name == 'process_start_time_seconds')
           .first;

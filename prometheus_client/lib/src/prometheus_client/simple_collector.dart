@@ -11,8 +11,12 @@ abstract class _SimpleCollector<Child> extends Collector {
 
   /// The unmodifiable list of [labelNames] assigned to this metric.
   final List<String> labelNames;
+
   final _children = HashMap<List<String>, Child>(
-      equals: _eq.equals, hashCode: _eq.hash, isValidKey: _eq.isValidKey);
+    equals: _eq.equals,
+    hashCode: _eq.hash,
+    isValidKey: _eq.isValidKey,
+  );
 
   _SimpleCollector({
     required this.name,

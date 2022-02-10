@@ -2,13 +2,21 @@ part of prometheus_client;
 
 /// A [Gauge] represents a value that can go up and down.
 class Gauge extends _SimpleCollector<GaugeChild> {
+  /// Optional callback called in [collect] before samples are collected.
+  ///
+  /// Can be used to update the current sample value before collecting it.
+  final Collect<Gauge>? collectCallback;
+
   /// Construct a new [Gauge] with a [name], [help] text and optional
   /// [labelNames].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
+  /// The optional [collectCallback] is called at the beginning of [collect] and
+  /// allows to update the value of the gauge before collecting it.
   Gauge({
     required String name,
     required String help,
     List<String> labelNames = const [],
+    this.collectCallback,
   }) : super(name: name, help: help, labelNames: labelNames);
 
   /// Increment the [value] of the gauge without labels by [amount].
@@ -36,12 +44,19 @@ class Gauge extends _SimpleCollector<GaugeChild> {
   set value(double v) => _noLabelChild.value = v;
 
   @override
-  Iterable<MetricFamilySamples> collect() sync* {
+  Future<Iterable<MetricFamilySamples>> collect() async {
+    await collectCallback?.call(this);
+
     final samples = <Sample>[];
     _children.forEach((labelValues, child) =>
         samples.add(Sample(name, labelNames, labelValues, child.value)));
 
-    yield MetricFamilySamples(name, MetricType.gauge, help, samples);
+    return [MetricFamilySamples(name, MetricType.gauge, help, samples)];
+  }
+
+  @override
+  Iterable<String> collectNames() {
+    return [name];
   }
 
   @override

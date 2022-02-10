@@ -37,8 +37,9 @@ Future main() async {
 
       // Output metrics in the text representation
       request.response.headers.add('content-type', format.contentType);
-      format.write004(request.response,
-          CollectorRegistry.defaultRegistry.collectMetricFamilySamples());
+      final metrics =
+          await CollectorRegistry.defaultRegistry.collectMetricFamilySamples();
+      format.write004(request.response, metrics);
 
       await request.response.close();
     }));

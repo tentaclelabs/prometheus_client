@@ -3,14 +3,20 @@ import 'package:test/test.dart';
 
 void main() {
   group('Counter', () {
-    test('Should register counter at registry', () {
+    test('Should register counter at registry', () async {
       final collectorRegistry = CollectorRegistry();
       Counter(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
+          await collectorRegistry.collectMetricFamilySamples();
 
-      expect(metricFamilySamples, contains('my_metric'));
+      expect(metricFamilySamples.map((m) => m.name), contains('my_metric'));
+    });
+
+    test('Should collect metric names', () {
+      final counter = Counter(name: 'my_metric', help: 'Help!');
+
+      expect(counter.collectNames(), equals(['my_metric']));
     });
 
     test('Should initialize counter with 0', () {
@@ -54,9 +60,11 @@ void main() {
       expect(() => counter.labels(['not_allowed']), throwsArgumentError);
     });
 
-    test('Should collect samples for metric without labels', () {
+    test('Should collect samples for metric without labels', () async {
       final counter = Counter(name: 'my_metric', help: 'Help!');
-      final sample = counter.collect().toList().expand((m) => m.samples).first;
+      final metricFamilySamples = await counter.collect();
+      final sample =
+          metricFamilySamples.toList().expand((m) => m.samples).first;
 
       expect(sample.name, equals('my_metric'));
       expect(sample.labelNames, isEmpty);
@@ -87,11 +95,13 @@ void main() {
       expect(() => counter.inc(), throwsStateError);
     });
 
-    test('Should collect samples for metric with labels', () {
+    test('Should collect samples for metric with labels', () async {
       final counter =
           Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       counter.labels(['mine']);
-      final sample = counter.collect().toList().expand((m) => m.samples).first;
+      final metricFamilySamples = await counter.collect();
+      final sample =
+          metricFamilySamples.toList().expand((m) => m.samples).first;
 
       expect(sample.name, equals('my_metric'));
       expect(sample.labelNames, equals(['name']));
@@ -99,14 +109,14 @@ void main() {
       expect(sample.value, equals(0.0));
     });
 
-    test('Should remove a child', () {
+    test('Should remove a child', () async {
       final counter =
           Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       counter.labels(['yours']);
       counter.labels(['mine']);
       counter.remove(['mine']);
-      final labelValues = counter
-          .collect()
+      final metricFamilySamples = await counter.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
@@ -115,20 +125,36 @@ void main() {
       expect(labelValues, containsAll(['yours']));
     });
 
-    test('Should clear all children', () {
+    test('Should clear all children', () async {
       final counter =
           Counter(name: 'my_metric', help: 'Help!', labelNames: ['name']);
       counter.labels(['yours']);
       counter.labels(['mine']);
       counter.clear();
-      final labelValues = counter
-          .collect()
+      final metricFamilySamples = await counter.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
           .expand((l) => l);
 
       expect(labelValues, isEmpty);
+    });
+
+    test('Should call collect callback on collect', () async {
+      final counter = Counter(
+        name: 'my_metric',
+        help: 'Help!',
+        collectCallback: (counter) {
+          counter.inc(1337);
+        },
+      );
+      final metricFamilySamples = await counter.collect();
+      final sample =
+          metricFamilySamples.toList().expand((m) => m.samples).first;
+
+      expect(sample.name, equals('my_metric'));
+      expect(sample.value, equals(1337.0));
     });
   });
 }

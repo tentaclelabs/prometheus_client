@@ -2,13 +2,21 @@ part of prometheus_client;
 
 /// [Counter] is a monotonically increasing counter.
 class Counter extends _SimpleCollector<CounterChild> {
+  /// Optional callback called in [collect] before samples are collected.
+  ///
+  /// Can be used to update the current sample value before collecting it.
+  final Collect<Counter>? collectCallback;
+
   /// Construct a new [Counter] with a [name], [help] text and optional
   /// [labelNames].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
+  /// The optional [collectCallback] is called at the beginning of [collect] and
+  /// allows to update the value of the counter before collecting it.
   Counter({
     required String name,
     required String help,
     List<String> labelNames = const [],
+    this.collectCallback,
   }) : super(name: name, help: help, labelNames: labelNames);
 
   /// Increment the [value] of the counter without labels by [amount].
@@ -21,12 +29,19 @@ class Counter extends _SimpleCollector<CounterChild> {
   double get value => _noLabelChild.value;
 
   @override
-  Iterable<MetricFamilySamples> collect() sync* {
+  Future<Iterable<MetricFamilySamples>> collect() async {
+    await collectCallback?.call(this);
+
     final samples = <Sample>[];
     _children.forEach((labelValues, child) =>
         samples.add(Sample(name, labelNames, labelValues, child._value)));
 
-    yield MetricFamilySamples(name, MetricType.counter, help, samples);
+    return [MetricFamilySamples(name, MetricType.counter, help, samples)];
+  }
+
+  @override
+  Iterable<String> collectNames() {
+    return [name];
   }
 
   @override

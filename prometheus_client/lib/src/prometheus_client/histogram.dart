@@ -24,6 +24,11 @@ class Histogram extends _SimpleCollector<HistogramChild> {
     10
   ];
 
+  /// Optional callback called in [collect] before samples are collected.
+  ///
+  /// Can be used to update the current sample value before collecting it.
+  final Collect<Histogram>? collectCallback;
+
   /// The upper bounds of the buckets.
   final List<double> buckets;
 
@@ -32,11 +37,14 @@ class Histogram extends _SimpleCollector<HistogramChild> {
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
   /// [buckets] have to be sorted in ascending order. If no buckets are provided
   /// the [defaultBuckets] are used instead.
+  /// The optional [collectCallback] is called at the beginning of [collect] and
+  /// allows to update the value of the histogram before collecting it.
   Histogram({
     required String name,
     required String help,
     List<String> labelNames = const [],
     List<double> buckets = defaultBuckets,
+    this.collectCallback,
   })  : buckets = List.unmodifiable(_sanitizeBuckets(buckets)),
         super(name: name, help: help, labelNames: labelNames) {
     if (labelNames.contains(leLabel)) {
@@ -49,6 +57,8 @@ class Histogram extends _SimpleCollector<HistogramChild> {
   /// [labelNames]. The [count] buckets are linear distributed starting at
   /// [start] with a distance of [width].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
+  /// The optional [collectCallback] is called at the beginning of [collect] and
+  /// allows to update the value of the histogram before collecting it.
   Histogram.linear({
     required String name,
     required String help,
@@ -56,17 +66,21 @@ class Histogram extends _SimpleCollector<HistogramChild> {
     required double width,
     required int count,
     List<String> labelNames = const [],
+    Collect? collectCallback,
   }) : this(
           name: name,
           help: help,
           labelNames: labelNames,
           buckets: _generateLinearBuckets(start, width, count),
+          collectCallback: collectCallback,
         );
 
   /// Construct a new [Histogram] with a [name], [help] text, and optional
   /// [labelNames]. The [count] buckets are exponential distributed starting at
   /// [start] with a distance growing exponentially by [factor].
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
+  /// The optional [collectCallback] is called at the beginning of [collect] and
+  /// allows to update the value of the histogram before collecting it.
   Histogram.exponential({
     required String name,
     required String help,
@@ -74,11 +88,13 @@ class Histogram extends _SimpleCollector<HistogramChild> {
     required double factor,
     required int count,
     List<String> labelNames = const [],
+    Collect? collectCallback,
   }) : this(
           name: name,
           help: help,
           labelNames: labelNames,
           buckets: _generateExponentialBuckets(start, factor, count),
+          collectCallback: collectCallback,
         );
 
   /// Observe a new value [v] and store it in the corresponding buckets of a
@@ -109,7 +125,9 @@ class Histogram extends _SimpleCollector<HistogramChild> {
   double get sum => _noLabelChild.sum;
 
   @override
-  Iterable<MetricFamilySamples> collect() sync* {
+  Future<Iterable<MetricFamilySamples>> collect() async {
+    await collectCallback?.call(this);
+
     final samples = <Sample>[];
 
     _children.forEach((labelValues, child) {
@@ -117,10 +135,11 @@ class Histogram extends _SimpleCollector<HistogramChild> {
 
       for (var i = 0; i < buckets.length; ++i) {
         samples.add(Sample(
-            name + '_bucket',
-            labelNamesWithLe,
-            List.of(labelValues)..add(formatDouble(buckets[i])),
-            child._bucketValues[i]));
+          name + '_bucket',
+          labelNamesWithLe,
+          List.of(labelValues)..add(formatDouble(buckets[i])),
+          child._bucketValues[i],
+        ));
       }
 
       samples
@@ -128,40 +147,16 @@ class Histogram extends _SimpleCollector<HistogramChild> {
       samples.add(Sample(name + '_sum', labelNames, labelValues, child.sum));
     });
 
-    yield MetricFamilySamples(name, MetricType.histogram, help, samples);
+    return [MetricFamilySamples(name, MetricType.histogram, help, samples)];
+  }
+
+  @override
+  Iterable<String> collectNames() {
+    return ['${name}_count', '${name}_sum', '${name}_bucket', name];
   }
 
   @override
   HistogramChild _createChild() => HistogramChild._(buckets);
-
-  static List<double> _sanitizeBuckets(List<double> buckets) {
-    if (buckets.isEmpty) {
-      throw ArgumentError.value(
-          buckets, 'buckets', 'Histogram must have at least one bucket.');
-    }
-    buckets.reduce((l, r) {
-      if (l >= r) {
-        throw ArgumentError.value(buckets, 'buckets',
-            'Histogram buckets must be in increasing order.');
-      }
-      return r;
-    });
-
-    if (buckets[buckets.length - 1].isFinite) {
-      buckets = List.of(buckets);
-      buckets.add(double.infinity);
-    }
-
-    return buckets;
-  }
-
-  static List<double> _generateLinearBuckets(
-          double start, double width, int count) =>
-      List<double>.generate(count, (i) => start + i * width);
-
-  static List<double> _generateExponentialBuckets(
-          double start, double factor, int count) =>
-      List<double>.generate(count, (i) => start * math.pow(factor, i));
 }
 
 /// Defines a [HistogramChild] of a [Histogram] with assigned [labelValues].
@@ -216,4 +211,37 @@ class HistogramChild {
 
   /// Access the total sum of the elements in a histogram with labels.
   double get sum => _sum;
+}
+
+List<double> _generateLinearBuckets(double start, double width, int count) {
+  return List<double>.generate(count, (i) => start + i * width);
+}
+
+List<double> _generateExponentialBuckets(
+  double start,
+  double factor,
+  int count,
+) {
+  return List<double>.generate(count, (i) => start * math.pow(factor, i));
+}
+
+List<double> _sanitizeBuckets(List<double> buckets) {
+  if (buckets.isEmpty) {
+    throw ArgumentError.value(
+        buckets, 'buckets', 'Histogram must have at least one bucket.');
+  }
+  buckets.reduce((l, r) {
+    if (l >= r) {
+      throw ArgumentError.value(
+          buckets, 'buckets', 'Histogram buckets must be in increasing order.');
+    }
+    return r;
+  });
+
+  if (buckets[buckets.length - 1].isFinite) {
+    buckets = List.of(buckets);
+    buckets.add(double.infinity);
+  }
+
+  return buckets;
 }
