@@ -17,9 +17,12 @@ void main() {
 
       expect(response.statusCode, equals(200));
       expect(
-          response.headers,
-          containsPair(
-              'content-type', 'text/plain; version=0.0.4; charset=utf-8'));
+        response.headers,
+        containsPair(
+          'content-type',
+          'text/plain; version=0.0.4; charset=utf-8',
+        ),
+      );
 
       final body = await response.readAsString();
       expect(body, contains('my_metric'));

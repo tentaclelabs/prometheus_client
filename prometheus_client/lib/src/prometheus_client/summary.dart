@@ -7,6 +7,11 @@ part of prometheus_client;
 class Summary extends _SimpleCollector<SummaryChild> {
   static const quantileLabel = 'quantile';
 
+  /// Optional callback called in [collect] before samples are collected.
+  ///
+  /// Can be used to update the current sample value before collecting it.
+  final Collect<Summary>? collectCallback;
+
   /// Quantiles to observe by the summary.
   final List<Quantile> quantiles;
 
@@ -27,6 +32,8 @@ class Summary extends _SimpleCollector<SummaryChild> {
   /// If [labelNames] are provided, use [labels(...)] to assign label values.
   /// If no [quantiles] are provided the summary only has a count and sum.
   /// If not provided, [maxAge] defaults to 10 minutes and [ageBuckets] to 5.
+  /// The optional [collectCallback] is called at the beginning of [collect] and
+  /// allows to update the value of the summary before collecting it.
   Summary({
     required String name,
     required String help,
@@ -34,6 +41,7 @@ class Summary extends _SimpleCollector<SummaryChild> {
     List<Quantile> quantiles = const [],
     this.maxAge = const Duration(minutes: 10),
     this.ageBuckets = 5,
+    this.collectCallback,
   })  : quantiles = List.unmodifiable(quantiles),
         super(name: name, help: help, labelNames: labelNames) {
     if (labelNames.contains(quantileLabel)) {
@@ -72,7 +80,9 @@ class Summary extends _SimpleCollector<SummaryChild> {
   SummaryChild _createChild() => SummaryChild._(quantiles, maxAge, ageBuckets);
 
   @override
-  Iterable<MetricFamilySamples> collect() sync* {
+  Future<Iterable<MetricFamilySamples>> collect() async {
+    await collectCallback?.call(this);
+
     final samples = <Sample>[];
 
     _children.forEach((labelValues, child) {
@@ -90,7 +100,16 @@ class Summary extends _SimpleCollector<SummaryChild> {
       samples.add(Sample(name + '_sum', labelNames, labelValues, child.sum));
     });
 
-    yield MetricFamilySamples(name, MetricType.summary, help, samples);
+    return [MetricFamilySamples(name, MetricType.summary, help, samples)];
+  }
+
+  @override
+  Iterable<String> collectNames() {
+    return [
+      '${name}_count',
+      '${name}_sum',
+      name,
+    ];
   }
 }
 

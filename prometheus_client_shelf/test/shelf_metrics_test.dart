@@ -15,7 +15,7 @@ void main() {
           shelf.Request('GET', Uri.tryParse('http://example.com/test')!));
 
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples();
+          await collectorRegistry.collectMetricFamilySamples();
       final metric = metricFamilySamples
           .firstWhere((s) => s.name == 'http_request_duration_seconds');
 

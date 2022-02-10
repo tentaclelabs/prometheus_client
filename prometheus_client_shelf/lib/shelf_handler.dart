@@ -12,11 +12,14 @@ import 'package:shelf/shelf.dart' as shelf;
 shelf.Handler prometheusHandler([CollectorRegistry? registry]) {
   final reg = registry ?? CollectorRegistry.defaultRegistry;
 
-  return (shelf.Request? request) {
+  return (shelf.Request? request) async {
     // TODO: Instead of using a StringBuffer we could directly stream to network
     final buffer = StringBuffer();
-    format.write004(buffer, reg.collectMetricFamilySamples());
-    return shelf.Response.ok(buffer.toString(),
-        headers: {'Content-Type': format.contentType});
+    final metrics = await reg.collectMetricFamilySamples();
+    format.write004(buffer, metrics);
+    return shelf.Response.ok(
+      buffer.toString(),
+      headers: {'Content-Type': format.contentType},
+    );
   };
 }

@@ -4,9 +4,9 @@ prometheus_client_shelf
 [![Pub Version](https://img.shields.io/pub/v/prometheus_client_shelf)][prometheus_client_shelf]
 [![Dart CI](https://github.com/tentaclelabs/prometheus_client/actions/workflows/dart.yml/badge.svg)](https://github.com/tentaclelabs/prometheus_client/actions/workflows/dart.yml)
 
-This package exposes [Prometheus][prometheus] metrics for [shelf][shelf] using the package [prometheus_client][prometheus_client]. 
-To expose them in your server application the package comes with a shelf handler. 
-In addition, it comes with some plug-in ready metrics for the shelf.
+This package exposes [Prometheus][prometheus] metrics for [shelf][shelf] using the
+package [prometheus_client][prometheus_client]. To expose them in your server application the package comes with a shelf
+handler. In addition, it comes with some plug-in ready metrics for the shelf.
 
 You can find the latest updates in the [changelog][changelog].
 
@@ -26,13 +26,14 @@ import 'package:shelf_router/shelf_router.dart';
 main() async {
   // Register default runtime metrics
   runtime_metrics.register();
-  
+
   // Create a metric of type counter. 
   // Always register your metric, either at the default registry or a custom one.
   final greetingCounter = Counter(
-    name: 'greetings_total', 
+    name: 'greetings_total',
     help: 'The total amount of greetings',
-  )..register();
+  )
+    ..register();
   final app = Router();
 
   app.get('/hello', (shelf.Request request) {
@@ -40,12 +41,12 @@ main() async {
     greetingCounter.inc();
     return shelf.Response.ok('hello-world');
   });
-  
+
   // Register a handler to expose the metrics in the Prometheus text format
   app.get('/metrics', prometheusHandler());
 
   var handler = const shelf.Pipeline()
-      // Register a middleware to track request times
+  // Register a middleware to track request times
       .addMiddleware(shelf_metrics.register())
       .addHandler(app.handler);
   var server = await io.serve(handler, 'localhost', 8080);
@@ -54,17 +55,34 @@ main() async {
 }
 ```
 
-Start the example application and access the exposed metrics at `http://localhost:8080/metrics`.
-For a full usage example, take a look at [`example/prometheus_client_shelf_example.dart`][example].
+Start the example application and access the exposed metrics at `http://localhost:8080/metrics`. For a full usage
+example, take a look at [`example/prometheus_client_shelf_example.dart`][example].
+
+### Metrics Handler
+
+This packages comes with
+a [shelf handler](https://pub.dev/documentation/prometheus_client_shelf/latest/shelf_handler/prometheusHandler.html)
+that can be used to expose metrics with a shelf server.
+
+### Middleware
+
+To measure request counts and duration by method and status code, this package provides
+a [shelf middleware](https://pub.dev/documentation/prometheus_client_shelf/latest/shelf_metrics/register.html).
 
 ## Features and bugs
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [prometheus_client]: https://pub.dev/packages/prometheus_client
+
 [prometheus_client_shelf]: https://pub.dev/packages/prometheus_client_shelf
+
 [tracker]: https://github.com/tentaclelabs/prometheus_client/issues
+
 [prometheus]: https://prometheus.io/
+
 [shelf]: https://pub.dev/packages/shelf
+
 [example]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
+
 [changelog]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client_shelf/CHANGELOG.md

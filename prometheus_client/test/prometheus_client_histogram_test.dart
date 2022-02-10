@@ -3,20 +3,35 @@ import 'package:test/test.dart';
 
 void main() {
   group('Histogram', () {
-    test('Should register histogram at registry', () {
+    test('Should register histogram at registry', () async {
       final collectorRegistry = CollectorRegistry();
       Histogram(name: 'my_metric', help: 'Help!').register(collectorRegistry);
 
       final metricFamilySamples =
-          collectorRegistry.collectMetricFamilySamples().map((m) => m.name);
+          await collectorRegistry.collectMetricFamilySamples();
 
-      expect(metricFamilySamples, contains('my_metric'));
+      expect(metricFamilySamples.map((m) => m.name), contains('my_metric'));
+    });
+
+    test('Should collect metric names', () {
+      final histogram = Histogram(name: 'my_metric', help: 'Help!');
+
+      expect(
+        histogram.collectNames(),
+        equals([
+          'my_metric_count',
+          'my_metric_sum',
+          'my_metric_bucket',
+          'my_metric'
+        ]),
+      );
     });
 
     test('Should fail if labels contain "le"', () {
       expect(
-          () => Histogram(name: 'my_metric', help: 'Help!', labelNames: ['le']),
-          throwsArgumentError);
+        () => Histogram(name: 'my_metric', help: 'Help!', labelNames: ['le']),
+        throwsArgumentError,
+      );
     });
 
     test('Should initialize histogram with custom buckets', () {
@@ -46,8 +61,9 @@ void main() {
     test('Should fail if custom buckets have wrong order', () {
       final buckets = [0.25, 1.0, 0.5];
       expect(
-          () => Histogram(name: 'my_metric', help: 'Help!', buckets: buckets),
-          throwsArgumentError);
+        () => Histogram(name: 'my_metric', help: 'Help!', buckets: buckets),
+        throwsArgumentError,
+      );
     });
 
     test('Should initialize histogram with linear buckets', () {
@@ -60,20 +76,21 @@ void main() {
       );
 
       expect(
-          histogram.buckets,
-          equals([
-            1.0,
-            2.0,
-            3.0,
-            4.0,
-            5.0,
-            6.0,
-            7.0,
-            8.0,
-            9.0,
-            10.0,
-            double.infinity
-          ]));
+        histogram.buckets,
+        equals([
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0,
+          9.0,
+          10.0,
+          double.infinity
+        ]),
+      );
     });
 
     test('Should initialize histogram with exponential buckets', () {
@@ -86,20 +103,21 @@ void main() {
       );
 
       expect(
-          histogram.buckets,
-          equals([
-            1.0,
-            2.0,
-            4.0,
-            8.0,
-            16.0,
-            32.0,
-            64.0,
-            128.0,
-            256.0,
-            512.0,
-            double.infinity
-          ]));
+        histogram.buckets,
+        equals([
+          1.0,
+          2.0,
+          4.0,
+          8.0,
+          16.0,
+          32.0,
+          64.0,
+          128.0,
+          256.0,
+          512.0,
+          double.infinity
+        ]),
+      );
     });
 
     test('Should initialize histogram with 0', () {
@@ -108,24 +126,25 @@ void main() {
       expect(histogram.sum, equals(0.0));
       expect(histogram.count, equals(0.0));
       expect(
-          histogram.bucketValues,
-          equals([
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ]));
+        histogram.bucketValues,
+        equals([
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]),
+      );
     });
 
     test('Should observe values and update histogram', () {
@@ -180,13 +199,14 @@ void main() {
       expect(() => histogram.labels(['not_allowed']), throwsArgumentError);
     });
 
-    test('Should collect samples for metric without labels', () {
+    test('Should collect samples for metric without labels', () async {
       final histogram = Histogram(
         name: 'my_metric',
         help: 'Help!',
         buckets: [0.25, 0.5, 1.0],
       );
-      final samples = histogram.collect().toList().expand((m) => m.samples);
+      final metricFamilySamples = await histogram.collect();
+      final samples = metricFamilySamples.toList().expand((m) => m.samples);
       final sampleSum = samples.firstWhere((s) => s.name == 'my_metric_sum');
       final sampleCount =
           samples.firstWhere((s) => s.name == 'my_metric_count');
@@ -238,7 +258,7 @@ void main() {
       expect(() => histogram.observe(1.0), throwsStateError);
     });
 
-    test('Should collect samples for metric with labels', () {
+    test('Should collect samples for metric with labels', () async {
       final histogram = Histogram(
         name: 'my_metric',
         help: 'Help!',
@@ -246,7 +266,8 @@ void main() {
         buckets: [0.25, 0.5, 1.0],
       );
       histogram.labels(['mine']);
-      final samples = histogram.collect().toList().expand((m) => m.samples);
+      final metricFamilySamples = await histogram.collect();
+      final samples = metricFamilySamples.toList().expand((m) => m.samples);
       final sampleSum = samples.firstWhere((s) => s.name == 'my_metric_sum');
       final sampleCount =
           samples.firstWhere((s) => s.name == 'my_metric_count');
@@ -263,7 +284,7 @@ void main() {
       expect(sampleBuckets, hasLength(4));
     });
 
-    test('Should remove a child', () {
+    test('Should remove a child', () async {
       final histogram = Histogram(
         name: 'my_metric',
         help: 'Help!',
@@ -272,8 +293,8 @@ void main() {
       histogram.labels(['yours']);
       histogram.labels(['mine']);
       histogram.remove(['mine']);
-      final labelValues = histogram
-          .collect()
+      final metricFamilySamples = await histogram.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
@@ -282,7 +303,7 @@ void main() {
       expect(labelValues, containsAll(['yours']));
     });
 
-    test('Should clear all children', () {
+    test('Should clear all children', () async {
       final histogram = Histogram(
         name: 'my_metric',
         help: 'Help!',
@@ -291,14 +312,33 @@ void main() {
       histogram.labels(['yours']);
       histogram.labels(['mine']);
       histogram.clear();
-      final labelValues = histogram
-          .collect()
+      final metricFamilySamples = await histogram.collect();
+      final labelValues = metricFamilySamples
           .toList()
           .expand((m) => m.samples)
           .map((s) => s.labelValues)
           .expand((l) => l);
 
       expect(labelValues, isEmpty);
+    });
+
+    test('Should call collect callback on collect', () async {
+      final histogram = Histogram(
+        name: 'my_metric',
+        help: 'Help!',
+        collectCallback: (histogram) {
+          histogram.observe(1337);
+        },
+      );
+      final metricFamilySamples = await histogram.collect();
+      final sample = metricFamilySamples
+          .toList()
+          .expand((m) => m.samples)
+          .where((s) => s.name == 'my_metric_sum')
+          .first;
+
+      expect(sample.name, equals('my_metric_sum'));
+      expect(sample.value, equals(1337.0));
     });
   });
 }

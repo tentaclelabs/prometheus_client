@@ -45,9 +45,12 @@ class Sample {
   /// as the sampled [value] and an optional [timestamp].
   /// [labelNames] and [labelValues] can be empty lists.
   Sample(
-      this.name, List<String> labelNames, List<String> labelValues, this.value,
-      [this.timestamp])
-      : labelNames = List.unmodifiable(labelNames),
+    this.name,
+    List<String> labelNames,
+    List<String> labelValues,
+    this.value, [
+    this.timestamp,
+  ])  : labelNames = List.unmodifiable(labelNames),
         labelValues = List.unmodifiable(labelValues);
 
   @override
@@ -97,11 +100,17 @@ class MetricFamilySamples {
       '$name ($type) $help [${samples.isEmpty ? '' : '\n'}${samples.join('\n')}]';
 }
 
+/// A callback used to aggregate the current sample values.
+typedef Collect<T extends Collector> = FutureOr<void> Function(T collector);
+
 /// A [Collector] is registered at a [CollectorRegistry] and scraped for metrics.
 /// A [Collector] can be registered at multiple [CollectorRegistry]s.
 abstract class Collector {
   /// [collect] all metrics and samples that are part of this [Collector].
-  Iterable<MetricFamilySamples> collect();
+  Future<Iterable<MetricFamilySamples>> collect();
+
+  /// Collect all metric names, including child metrics.
+  Iterable<String> collectNames();
 }
 
 /// A [CollectorRegistry] is used to manage [Collector]s.
@@ -118,7 +127,7 @@ class CollectorRegistry {
   /// Register a [Collector] with the [CollectorRegistry].
   /// Does nothing if the [collector] is already registered.
   void register(Collector collector) {
-    final collectorNames = _collectNames(collector);
+    final collectorNames = Set<String>.from(collector.collectNames());
 
     for (var name in collectorNames) {
       if (_namesToCollectors.containsKey(name)) {
@@ -146,33 +155,13 @@ class CollectorRegistry {
   }
 
   /// Collect all metrics and samples from the registered [Collector]s.
-  Iterable<MetricFamilySamples> collectMetricFamilySamples() {
-    return _collectorsToNames.keys.map((c) => c.collect()).expand((m) => m);
+  Future<Iterable<MetricFamilySamples>> collectMetricFamilySamples() async {
+    final metricFamilySamples =
+        await Future.wait(_collectorsToNames.keys.map((c) => c.collect()));
+
+    return metricFamilySamples.expand((m) => m);
   }
 
-  Set<String> _collectNames(Collector collector) {
-    final metricFamilySamples = collector.collect();
-    final metricNames = <String>{};
-
-    for (var metricFamily in metricFamilySamples) {
-      switch (metricFamily.type) {
-        case MetricType.summary:
-          metricNames.add(metricFamily.name + '_count');
-          metricNames.add(metricFamily.name + '_sum');
-          metricNames.add(metricFamily.name);
-          break;
-        case MetricType.histogram:
-          metricNames.add(metricFamily.name + '_count');
-          metricNames.add(metricFamily.name + '_sum');
-          metricNames.add(metricFamily.name + '_bucket');
-          metricNames.add(metricFamily.name);
-          break;
-        default:
-          metricNames.add(metricFamily.name);
-          break;
-      }
-    }
-
-    return metricNames;
-  }
+  @override
+  String toString() => '${_namesToCollectors.length} metrics';
 }
