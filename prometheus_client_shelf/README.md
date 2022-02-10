@@ -60,14 +60,12 @@ example, take a look at [`example/prometheus_client_shelf_example.dart`][example
 
 ### Metrics Handler
 
-This packages comes with
-a [shelf handler](https://pub.dev/documentation/prometheus_client_shelf/latest/shelf_handler/prometheusHandler.html)
-that can be used to expose metrics with a shelf server.
+This packages comes with a [shelf handler][shelf_handler] that can be used to expose metrics with a shelf server.
 
 ### Middleware
 
 To measure request counts and duration by method and status code, this package provides
-a [shelf middleware](https://pub.dev/documentation/prometheus_client_shelf/latest/shelf_metrics/register.html).
+a [shelf middleware][shelf_middleware].
 
 ## Features and bugs
 
@@ -86,3 +84,7 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [example]: https://github.com/tentaclelabs/prometheus_client/blob/main/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
 
 [changelog]: https://github.com/tentaclelabs/prometheus_client/blob/main/prometheus_client_shelf/CHANGELOG.md
+
+[shelf_handler]: https://pub.dev/documentation/prometheus_client_shelf/latest/shelf_handler/prometheusHandler.html
+
+[shelf_middleware]: https://pub.dev/documentation/prometheus_client_shelf/latest/shelf_metrics/register.html
