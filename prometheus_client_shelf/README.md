@@ -83,6 +83,6 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 
 [shelf]: https://pub.dev/packages/shelf
 
-[example]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
+[example]: https://github.com/tentaclelabs/prometheus_client/blob/main/prometheus_client_shelf/example/prometheus_client_shelf_example.dart
 
-[changelog]: https://github.com/tentaclelabs/prometheus_client/blob/master/prometheus_client_shelf/CHANGELOG.md
+[changelog]: https://github.com/tentaclelabs/prometheus_client/blob/main/prometheus_client_shelf/CHANGELOG.md
