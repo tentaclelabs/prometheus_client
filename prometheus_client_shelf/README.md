@@ -2,6 +2,7 @@ prometheus_client_shelf
 ===
 
 [![Pub Version](https://img.shields.io/pub/v/prometheus_client_shelf)][prometheus_client_shelf]
+[![Dart CI](https://github.com/tentaclelabs/prometheus_client/actions/workflows/dart.yml/badge.svg)](https://github.com/tentaclelabs/prometheus_client/actions/workflows/dart.yml)
 
 This package exposes [Prometheus][prometheus] metrics for [shelf][shelf] using the package [prometheus_client][prometheus_client]. 
 To expose them in your server application the package comes with a shelf handler. 
