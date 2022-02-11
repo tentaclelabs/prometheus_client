@@ -38,7 +38,7 @@ jobs:
         working-directory: ${{ matrix.package }}
         if: always() && steps.install.outcome == 'success'
       - name: Analyze with pana
-        run: dart pub global activate pana && pana .
+        run: dart pub global activate pana && pana --no-warning .
         working-directory: ${{ matrix.package }}
         if: always() && steps.install.outcome == 'success'
 
