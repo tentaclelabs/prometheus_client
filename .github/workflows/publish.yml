@@ -39,6 +39,7 @@ jobs:
 
       - name: (prometheus_client_shelf) Remove dependency override
         run: sudo snap install yq && yq eval "del(.dependency_overrides)" --inplace pubspec.yaml
+        if: github.event.release
         working-directory: prometheus_client_shelf
       - name: (prometheus_client_shelf) Install dependencies
         run: dart pub get
