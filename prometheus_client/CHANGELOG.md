@@ -1,8 +1,9 @@
 ## 0.6.0
 
-- Introduce a `collectCallback` into every metric type that allows to update the metric before the sample values are
+- Introduce a `collectCallback` into every metric type, which allows to update the metric before the sample values are
   collected. This is useful to perform more complex metric calculation only when the metrics are scraped.
-- **Breaking Change**: Make `collect()` method on metrics async. Related code is now async, too.
+- **Breaking Change**: Make `Collector.collect()` method on metrics async. Related code
+  like `CollectorRegistry.collectMetricFamilySamples()`, is now async, too.
 - Polish documentation towards a `1.0.0` release.
 
 ## 0.5.1

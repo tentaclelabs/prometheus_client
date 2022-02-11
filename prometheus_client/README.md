@@ -59,8 +59,7 @@ main() async {
 
       // Output metrics in the text representation
       request.response.headers.add('content-type', format.contentType);
-      final metrics =
-      await CollectorRegistry.defaultRegistry.collectMetricFamilySamples();
+      final metrics = await CollectorRegistry.defaultRegistry.collectMetricFamilySamples();
       format.write004(request.response, metrics);
       await request.response.close();
     }));
@@ -71,27 +70,131 @@ main() async {
 Start the example application and access the exposed metrics at `http://localhost:8080/`. For a full usage example, take
 a look at [`example/prometheus_client_example.dart`][example].
 
-### Counter
+### Metrics
 
-**TODO:**
+The package provides different kinds of metrics:
 
-**TODO: Document collect function**
+#### Counter
 
-### Gauge
+[`Counter`][counter] is a monotonically increasing counter.
+Counters can only be incremented, either by one or a custom amount:
 
-**TODO:**
+```dart
+final requestsCounter = Counter(
+  name: 'metric_requests_total',
+  help: 'The total amount of requests of the metrics.',
+);
 
-### Histogram
+requestsCounter.inc();
+requestsCounter.inc(64.0);
+```
 
-**TODO:**
+#### Gauge
 
-### Summary
+A [`Gauge`][gauge] represents a value that can go up and down:
 
-**TODO:**
+```dart
+final gauge = Gauge(
+  name: 'my_metric',
+  help: 'Help!',
+);
 
-### Runtime Metrics
+gauge.value = 1337.0;
+gauge.inc(2.0);
+gauge.dec(4.0);
+```
 
-**TODO: Link to docs, only a limited amount. What is possible with the dart boardmittel.**
+#### Histogram
+
+[`Histogram`][histogram] allows aggregatable distributions of events, such as request latencies.
+The buckets of the histogram are customizable and support both linear and exponential buckets.
+
+```dart
+final histogram = Histogram(
+    name: 'my_metric',
+    help: 'Help!',
+);
+
+histogram.observe(20.0);
+await histogram.observeDuration(() async {
+  // Some code
+});
+histogram.observeDurationSync(() {
+  // Some code
+});
+```
+
+#### Summary
+
+Similar to a Histogram, a [`Summary`][summary] samples observations (usually things like request durations and response sizes). While it also provides a total count of observations and a sum of all observed values, it calculates configurable quantiles over a sliding time window.
+
+```dart
+final summary = Summary(
+  name: 'my_metric',
+  help: 'Help!',
+);
+
+summary.observe(20.0);
+await summary.observeDuration(() async {
+  // Some code
+});
+summary.observeDurationSync(() {
+  // Some code
+});
+```
+
+#### Labels
+
+Metrics can optionally have labels. You can pass label names during metrics creation.
+Later on, you can access a child metric for your label values via the `labels()` function.
+
+```dart
+final requestsCounter = Counter(
+  name: 'metric_requests_total',
+  help: 'The total amount of requests of the metrics.',
+  labelNames: ['path'],
+);
+
+requestsCounter.labels(['my/path/']).inc();
+```
+
+#### Collect
+
+For metrics that should provide the current value during scraping, each metric type provides a `collectCallback` that is executed during scraping.
+You can use the callback to update the metric while scraping.
+The callback can either be sync, or return a `Future`:
+
+```dart
+final gauge = Gauge(
+  name: 'my_metric',
+  help: 'Help!',
+  collectCallback: (gauge) {
+    // Callback is executed every time the metric is collected.
+    // Use the function parameter to access the gauge and update
+    // its value.
+    gauge.value = 1337;
+  },
+);
+```
+
+### Default Metrics
+
+The [`RuntimeCollector`][runtime_collector] provides a basic set of built-in metrics. However, only a limited set of
+the [recommended standard metrics][default_metrics] is implemented, as Dart doesn't expose them.
+
+### Outputting Metrics
+
+The package comes with [function for serializing][write004] the metrics into the Prometheus metrics [text format][text_format]:
+
+```dart
+final buffer = StringBuffer();
+final metrics = await CollectorRegistry.defaultRegistry.collectMetricFamilySamples();
+format.write004(buffer, metrics);
+print(buffer.toString());
+```
+
+If you are using shelf, take a look at [prometheus_client_shelf][prometheus_client_shelf] for providing a metrics
+endpoint.
 
 ## Features and bugs
 
@@ -114,3 +217,17 @@ Please file feature requests and bugs at the [issue tracker][tracker].
 [prometheus_client_shelf]: https://pub.dev/packages/prometheus_client_shelf
 
 [prometheus_client]: https://pub.dev/packages/prometheus_client
+
+[counter]: https://pub.dev/documentation/prometheus_client/latest/prometheus_client/Counter-class.html
+
+[gauge]: https://pub.dev/documentation/prometheus_client/latest/prometheus_client/Gauge-class.html
+
+[histogram]: https://pub.dev/documentation/prometheus_client/latest/prometheus_client/Histogram-class.html
+
+[summary]: https://pub.dev/documentation/prometheus_client/latest/prometheus_client/Summary-class.html
+
+[runtime_collector]: https://pub.dev/documentation/prometheus_client/latest/prometheus_client.runtime_metrics/RuntimeCollector-class.html
+
+[default_metrics]: https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors
+
+[write004]: https://pub.dev/documentation/prometheus_client/latest/prometheus_client.format/write004.html
