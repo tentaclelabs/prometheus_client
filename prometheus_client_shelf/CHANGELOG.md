@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Stable release of prometheus_client_shelf 🎉, contains no changes since `0.6.0`.
+
 ## 0.6.0
 
 - Introduce a `collectCallback` into every metric type, which allows to update the metric before the sample values are
