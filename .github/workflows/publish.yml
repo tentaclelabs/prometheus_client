@@ -39,12 +39,13 @@ jobs:
 
       - name: (prometheus_client_shelf) Remove dependency override
         run: sudo snap install yq && yq eval "del(.dependency_overrides)" --inplace pubspec.yaml
-        if: github.event.release
         working-directory: prometheus_client_shelf
       - name: (prometheus_client_shelf) Install dependencies
         run: dart pub get
         working-directory: prometheus_client_shelf
-      - name: (prometheus_client_shelf) Dry-run publish
+      - # It's common that the dry-run step fails if the dependency constraint on prometheus_client is not valid and a
+        # newer version has to be uploaded. In that case, it's fine to ignore it.
+        name: (prometheus_client_shelf) Dry-run publish
         run: dart pub publish --dry-run
         working-directory: prometheus_client_shelf
       - name: (prometheus_client_shelf) Publish
