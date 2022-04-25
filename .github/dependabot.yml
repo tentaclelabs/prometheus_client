@@ -4,8 +4,17 @@
 # https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+enable-beta-ecosystems: true
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
+  - package-ecosystem: "pub"
+    directory: "/prometheus_client/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "pub"
+    directory: "/prometheus_client_shelf/"
+    schedule:
+      interval: "weekly"
