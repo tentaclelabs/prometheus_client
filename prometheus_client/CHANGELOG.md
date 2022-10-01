@@ -1,3 +1,7 @@
+## 1.0.0+1
+
+- Upgrade `lints` package to version `2.0.0`.
+
 ## 1.0.0
 
 - Stable release of prometheus_client 🎉, contains no changes since `0.6.0`.

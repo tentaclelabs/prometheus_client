@@ -135,7 +135,7 @@ class Histogram extends _SimpleCollector<HistogramChild> {
 
       for (var i = 0; i < buckets.length; ++i) {
         samples.add(Sample(
-          name + '_bucket',
+          '${name}_bucket',
           labelNamesWithLe,
           List.of(labelValues)..add(formatDouble(buckets[i])),
           child._bucketValues[i],
@@ -143,8 +143,8 @@ class Histogram extends _SimpleCollector<HistogramChild> {
       }
 
       samples
-          .add(Sample(name + '_count', labelNames, labelValues, child.count));
-      samples.add(Sample(name + '_sum', labelNames, labelValues, child.sum));
+          .add(Sample('${name}_count', labelNames, labelValues, child.count));
+      samples.add(Sample('${name}_sum', labelNames, labelValues, child.sum));
     });
 
     return [MetricFamilySamples(name, MetricType.histogram, help, samples)];

@@ -132,7 +132,7 @@ class CollectorRegistry {
     for (var name in collectorNames) {
       if (_namesToCollectors.containsKey(name)) {
         throw ArgumentError(
-            'Collector already registered that provides name: ' + name);
+            'Collector already registered that provides name: $name');
       }
     }
 
