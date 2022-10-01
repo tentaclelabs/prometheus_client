@@ -96,8 +96,8 @@ class Summary extends _SimpleCollector<SummaryChild> {
       }
 
       samples
-          .add(Sample(name + '_count', labelNames, labelValues, child.count));
-      samples.add(Sample(name + '_sum', labelNames, labelValues, child.sum));
+          .add(Sample('${name}_count', labelNames, labelValues, child.count));
+      samples.add(Sample('${name}_sum', labelNames, labelValues, child.sum));
     });
 
     return [MetricFamilySamples(name, MetricType.summary, help, samples)];
