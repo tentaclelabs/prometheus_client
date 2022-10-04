@@ -15,6 +15,7 @@ jobs:
   # against Dart dev.
   analyze:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -48,6 +49,7 @@ jobs:
   test:
     needs: analyze
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
