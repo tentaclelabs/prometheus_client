@@ -22,7 +22,7 @@ jobs:
         sdk: [ stable ]
         package: [ prometheus_client, prometheus_client_shelf ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           channel: ${{ matrix.sdk }}
@@ -58,7 +58,7 @@ jobs:
         sdk: [ dev ]
         package: [ prometheus_client, prometheus_client_shelf ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           channel: ${{ matrix.sdk }}
